@@ -1076,7 +1076,7 @@ async function submitBooking() {
       document.getElementById('ov').classList.remove('open');
       showToastAuth('Rezervimi u dërgua! Agjencia do të konfirmojë. ✓', 'success');
     } else {
-      alert(data.error);
+      showToastAuth(data.error, 'error');
     }
   } catch(err) {
     alert('Gabim. Provo sërish.');
