@@ -142,13 +142,13 @@ function updateNavUI(user) {
   if (user.type === 'business') {
     if (loginBtn) {
       loginBtn.textContent = `${user.name} ▾`;
-      loginBtn.onclick = () => window.open('/rentoks-dashboard.html', '_blank');
+      loginBtn.onclick = () => { window.location.href = '/rentoks-dashboard.html'; };
     }
     if (registerBtn) {
       registerBtn.textContent = 'Dashboard →';
       registerBtn.style.background = 'var(--lime, #c8ff00)';
       registerBtn.style.color = '#0d0d0d';
-      registerBtn.onclick = () => window.open('/rentoks-dashboard.html', '_blank');
+      registerBtn.onclick = () => { window.location.href = '/rentoks-dashboard.html'; };
     }
   }
 }
@@ -282,9 +282,9 @@ async function doLogin() {
     updateNavUI(data.user);
     showToastAuth(data.message || 'Mirë se vjen! 👋', 'success');
 
-    // Redirect biznes te dashboard
+    // Redirect biznes te dashboard (same tab)
     if (data.user.type === 'business') {
-      setTimeout(() => window.open('/rentoks-dashboard.html', '_blank'), 1000);
+      setTimeout(() => { window.location.href = '/rentoks-dashboard.html'; }, 1000);
     }
   } catch (err) {
     showFormError('login-form', err.message);

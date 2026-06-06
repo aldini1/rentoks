@@ -411,7 +411,7 @@ tr:hover td{background:var(--paper);}
         <div class="sb-pname">Agim Berisha</div>
         <div class="sb-prole">Pronar i agjencisë</div>
       </div>
-      <div class="sb-logout">↪</div>
+      <div class="sb-logout" onclick="dashLogout()" title="Çkyçu" style="cursor:pointer;">↪</div>
     </div>
   </div>
 </aside>
@@ -577,27 +577,27 @@ tr:hover td{background:var(--paper);}
         <div class="fp-title">Shto Veturë të Re</div>
         <div class="fp-sub">Plotëso të dhënat e veturës. Do të shfaqet në platformë pas aprovimit.</div>
         <div class="form-grid">
-          <div class="fg"><label>Marka</label><select><option>Volkswagen</option><option>BMW</option><option>Mercedes</option><option>Audi</option><option>Toyota</option><option>Skoda</option><option>Ford</option><option>Renault</option></select></div>
-          <div class="fg"><label>Modeli</label><input type="text" placeholder="p.sh. Golf 7"/></div>
+          <div class="fg"><label>Marka</label><select id="v-brand"><option>Volkswagen</option><option>BMW</option><option>Mercedes</option><option>Audi</option><option>Toyota</option><option>Skoda</option><option>Ford</option><option>Renault</option></select></div>
+          <div class="fg"><label>Modeli</label><input id="v-model" type="text" placeholder="p.sh. Golf 7"/></div>
         </div>
         <div class="form-grid three">
-          <div class="fg"><label>Viti</label><input type="number" placeholder="2020" min="2000" max="2026"/></div>
-          <div class="fg"><label>Karburanti</label><select><option>Diesel</option><option>Benzinë</option><option>Hibrid</option><option>Elektrik</option></select></div>
-          <div class="fg"><label>Transmisioni</label><select><option>Automatik</option><option>Manuale</option></select></div>
+          <div class="fg"><label>Viti</label><input id="v-year" type="number" placeholder="2020" min="2000" max="2030"/></div>
+          <div class="fg"><label>Karburanti</label><select id="v-fuel"><option>Diesel</option><option>Benzinë</option><option>Hibrid</option><option>Elektrik</option></select></div>
+          <div class="fg"><label>Transmisioni</label><select id="v-transmission"><option>Automatik</option><option>Manuale</option></select></div>
         </div>
         <div class="form-grid">
-          <div class="fg"><label>Çmimi / ditë (€)</label><input type="number" placeholder="35" min="10"/></div>
-          <div class="fg"><label>Numri i vendeve</label><select><option>2</option><option>4</option><option>5</option><option>7</option><option>8</option><option>9</option></select></div>
+          <div class="fg"><label>Çmimi / ditë (€)</label><input id="v-price" type="number" placeholder="35" min="10"/></div>
+          <div class="fg"><label>Numri i vendeve</label><select id="v-seats"><option>2</option><option>4</option><option>5</option><option>7</option><option>8</option><option>9</option></select></div>
         </div>
         <div class="form-grid">
-          <div class="fg"><label>Lokacioni i marrjes</label><input type="text" placeholder="p.sh. Prishtinë, Aeroporti"/></div>
-          <div class="fg"><label>Targat</label><input type="text" placeholder="01-234-AB"/></div>
+          <div class="fg"><label>Lokacioni i marrjes</label><input id="v-location" type="text" placeholder="p.sh. Prishtinë, Aeroporti"/></div>
+          <div class="fg"><label>Targat</label><input id="v-plate" type="text" placeholder="01-234-AB"/></div>
         </div>
         <div class="form-grid full">
-          <div class="fg"><label>Pajisjet shtesë</label><input type="text" placeholder="A/C, GPS, Bluetooth, Karrige fëmijësh..."/></div>
+          <div class="fg"><label>Pajisjet shtesë</label><input id="v-features" type="text" placeholder="A/C, GPS, Bluetooth, Karrige fëmijësh..."/></div>
         </div>
         <div class="form-grid full">
-          <div class="fg"><label>Përshkrim</label><textarea placeholder="Përshkruaj veturën, kushtet e dhënies me qira, rregullat..."></textarea></div>
+          <div class="fg"><label>Përshkrim</label><textarea id="v-description" placeholder="Përshkruaj veturën, kushtet e dhënies me qira, rregullat..."></textarea></div>
         </div>
         <div class="form-grid full">
           <div class="fg"><label>Fotografi (min 4)</label>
@@ -609,7 +609,7 @@ tr:hover td{background:var(--paper);}
           </div>
         </div>
         <div class="form-actions">
-          <button class="btn-save" onclick="showToast('Vetura u shtua! Do të shfaqet pas aprovimit. ✓');hideAddCar()">Ruaj Veturën</button>
+          <button id="save-car-btn" class="btn-save" onclick="addVehicle()">Ruaj Veturën</button>
           <button class="btn-cancel" onclick="hideAddCar()">Anulo</button>
         </div>
       </div>
@@ -754,18 +754,18 @@ tr:hover td{background:var(--paper);}
       <div class="earn-hero">
         <div class="eh-item">
           <div class="eh-label">Të ardhura këtë muaj</div>
-          <div class="eh-val lime">€2,840</div>
-          <div class="eh-change"><span class="up">↑ +18%</span> nga muaji i kaluar</div>
+          <div class="eh-val lime" id="earn-revenue">€—</div>
+          <div class="eh-change">nga muaji i kaluar</div>
         </div>
         <div class="eh-item">
           <div class="eh-label">Komision Rentoks (10%)</div>
-          <div class="eh-val">€284</div>
-          <div class="eh-change">24 rezervime × avg €11.8</div>
+          <div class="eh-val" id="earn-commission">€—</div>
+          <div class="eh-change" id="earn-bookings-info">—</div>
         </div>
         <div class="eh-item">
           <div class="eh-label">Fitimi neto</div>
-          <div class="eh-val">€2,556</div>
-          <div class="eh-change"><span class="up">↑ Rekord</span> qershor 2026</div>
+          <div class="eh-val" id="earn-net">€—</div>
+          <div class="eh-change">pas komisionit</div>
         </div>
       </div>
 
@@ -1003,8 +1003,11 @@ function goPage(id, btn) {
   document.getElementById('topbar-title').textContent = titles[id] || id;
   // close sidebar on mobile
   closeSidebar();
-  // build calendar if needed
-  if(id === 'calendar') buildCalendar();
+  // load real data per page
+  if(id === 'fleet' && typeof loadVehicles === 'function') loadVehicles();
+  if(id === 'bookings' && typeof loadAllBookings === 'function') loadAllBookings();
+  if(id === 'earnings' && typeof loadEarnings === 'function') loadEarnings();
+  if(id === 'calendar' && typeof loadCalendar === 'function') loadCalendar();
 }
 
 // ── SIDEBAR MOBILE ──
