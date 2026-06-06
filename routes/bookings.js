@@ -13,6 +13,18 @@ router.post('/', authMiddleware, async (req, res) => {
     // Llogarit ditët
     const days = Math.ceil((new Date(to_date) - new Date(from_date)) / 86400000);
     if (days < 1) return res.status(400).json({ error: 'Datat janë të gabuara.' });
+    // Kontrollo disponueshmërinë
+const conflict = await pool.query(
+  `SELECT id FROM bookings 
+   WHERE vehicle_id = $1 
+   AND status NOT IN ('cancelled', 'rejected')
+   AND from_date < $3 
+   AND to_date > $2`,
+  [vehicle_id, from_date, to_date]
+);
+if (conflict.rows.length > 0) {
+  return res.status(409).json({ error: 'Vetura është e rezervuar për këto data. Zgjedh data tjera.' });
+}
 
     // Merr çmimin e veturës
     const vehicle = await pool.query('SELECT * FROM vehicles WHERE id=$1', [vehicle_id]);
