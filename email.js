@@ -4,7 +4,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 async function sendBookingNotification({ to, businessName, clientName, carName, fromDate, toDate, days, total }) {
   await resend.emails.send({
     from: 'Rentoks <onboarding@resend.dev>',
-    to,
+    to: 'aldinmaxhuni1@gmail.com',
     subject: `Kërkesë e re rezervimi — ${carName}`,
     html: `
       <div style="font-family:sans-serif;max-width:600px;margin:0 auto;">
@@ -27,7 +27,7 @@ async function sendBookingNotification({ to, businessName, clientName, carName, 
 async function sendBookingConfirmation({ to, clientName, carName, fromDate, toDate, businessName, businessPhone }) {
   await resend.emails.send({
     from: 'Rentoks <onboarding@resend.dev>',
-    to,
+    to: 'aldinmaxhuni1@gmail.com',
     subject: `Rezervimi u konfirmua — ${carName}`,
     html: `
       <div style="font-family:sans-serif;max-width:600px;margin:0 auto;">
