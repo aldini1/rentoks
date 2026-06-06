@@ -1051,6 +1051,37 @@ function updateTotal() {
 function cM() { document.getElementById('ov').classList.remove('open'); }
 function cOut(e) { if(e.target.id === 'ov') cM(); }
 function sw(btn, t) { document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); openM(t); }
+async function submitBooking() {
+  const from = document.getElementById('b-from')?.value;
+  const to = document.getElementById('b-to')?.value;
+  if (!from || !to) { alert('Zgjedh datat!'); return; }
+
+  const token = localStorage.getItem('rentoks_token');
+  if (!token) { openModalAuth('login'); return; }
+
+  try {
+    const res = await fetch('/api/bookings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({
+        vehicle_id: bookCar.vehicle_id,
+        business_id: bookCar.business_id,
+        from_date: from,
+        to_date: to,
+        payment_type: 'cash'
+      })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      document.getElementById('ov').classList.remove('open');
+      showToastAuth('Rezervimi u dërgua! Agjencia do të konfirmojë. ✓', 'success');
+    } else {
+      alert(data.error);
+    }
+  } catch(err) {
+    alert('Gabim. Provo sërish.');
+  }
+}
 </script>
 </body>
 </html>
