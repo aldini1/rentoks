@@ -22,7 +22,7 @@ app.get('/api/health', (req, res) => {
 
 // Serve frontend
 app.get('/{*path}', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.json({ message: 'Rentoks API running ✓', version: '1.0.0' });
 });
 
 const PORT = process.env.PORT || 3000;
