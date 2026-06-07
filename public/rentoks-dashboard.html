@@ -838,11 +838,11 @@ tr:hover td{background:var(--paper);}
         </div>
       </div>
       <div class="section-card" style="padding:28px;">
-        <div style="display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap;">
-          <div style="display:flex;align-items:center;gap:6px;font-size:13px;"><div style="width:16px;height:16px;border-radius:4px;background:var(--green-light);border:1px solid #86efac;"></div>I lirë</div>
-          <div style="display:flex;align-items:center;gap:6px;font-size:13px;"><div style="width:16px;height:16px;border-radius:4px;background:var(--red-light);border:1px solid #fca5a5;"></div>I rezervuar</div>
-          <div style="display:flex;align-items:center;gap:6px;font-size:13px;"><div style="width:16px;height:16px;border-radius:4px;background:var(--lime);border:1px solid var(--lime2);"></div>Sot</div>
-          <div style="display:flex;align-items:center;gap:6px;font-size:13px;"><div style="width:16px;height:16px;border-radius:4px;background:var(--paper3);border:1px solid var(--border2);"></div>Joaktiv</div>
+        <div style="display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap;align-items:center;">
+          <div style="display:flex;align-items:center;gap:6px;font-size:13px;"><div style="width:16px;height:16px;border-radius:4px;background:var(--green-light);border:1.5px solid #86efac;"></div>I lirë — kliko për të bllokuar</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:13px;"><div style="width:16px;height:16px;border-radius:4px;background:var(--red-light);border:1.5px solid #fca5a5;"></div>Rezervim i platformës</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:13px;"><div style="width:16px;height:16px;border-radius:4px;background:#fed7aa;border:1.5px solid #fb923c;"></div>Bllokuar manualisht — kliko për të hequr</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:13px;"><div style="width:16px;height:16px;border-radius:4px;background:var(--lime);border:1.5px solid var(--lime2);"></div>Sot</div>
         </div>
         <div id="calendar-grid" style="overflow-x:auto;"></div>
       </div>
@@ -1117,48 +1117,10 @@ document.querySelectorAll('.ff').forEach(f => {
 
 // ── CALENDAR ──
 function buildCalendar() {
-  const grid = document.getElementById('calendar-grid');
-  const cars = ['VW Golf 7', 'BMW 5 Series', 'Toyota RAV4', 'Mercedes Vito', 'Skoda Octavia'];
-  const days = 14;
-  const today = new Date();
-  
-  // booked days per car (simulated)
-  const booked = {
-    'VW Golf 7': [0,1,5,6,7],
-    'BMW 5 Series': [3,4,5,6],
-    'Toyota RAV4': [0,5],
-    'Mercedes Vito': [4,5,6],
-    'Skoda Octavia': [1,2,8,9],
-  };
-
-  let html = `<table style="border-collapse:collapse;min-width:600px;width:100%;">
-    <thead><tr><th style="padding:10px 16px;font-size:11px;font-weight:700;text-align:left;color:var(--gray);text-transform:uppercase;letter-spacing:.8px;background:var(--paper);border-bottom:1px solid var(--border);">Vetura</th>`;
-  
-  for(let i = 0; i < days; i++) {
-    const d = new Date(today);
-    d.setDate(today.getDate() + i);
-    const isToday = i === 0;
-    html += `<th style="padding:8px 4px;font-size:10px;font-weight:700;text-align:center;color:${isToday?'var(--ink)':'var(--gray)'};background:var(--paper);border-bottom:1px solid var(--border);min-width:36px;">${d.getDate()}<br><span style="font-weight:400;">${['Di','Hë','Ma','Më','En','Pr','Sh'][d.getDay()]}</span></th>`;
+  // Thirr implementimin real me të dhëna nga API + blokime manuale
+  if (typeof loadCalendarReal === 'function') {
+    loadCalendarReal();
   }
-  html += '</tr></thead><tbody>';
-
-  cars.forEach((car, ci) => {
-    html += `<tr>
-      <td style="padding:10px 16px;font-size:13px;font-weight:600;color:var(--ink);border-bottom:1px solid var(--border);white-space:nowrap;">${car}</td>`;
-    for(let i = 0; i < days; i++) {
-      const isBooked = (booked[car]||[]).includes(i);
-      const isToday = i === 0;
-      let bg = isToday ? 'var(--lime)' : isBooked ? 'var(--red-light)' : 'var(--green-light)';
-      let border = isToday ? 'var(--lime2)' : isBooked ? '#fca5a5' : '#86efac';
-      html += `<td style="padding:4px;border-bottom:1px solid var(--border);text-align:center;">
-        <div style="width:28px;height:28px;border-radius:6px;background:${bg};border:1px solid ${border};margin:0 auto;cursor:pointer;transition:all .15s;" onclick="showToast('${isBooked?'I rezervuar':'I lirë'} — ${car}')" title="${isBooked?'I rezervuar':'I lirë'}"></div>
-      </td>`;
-    }
-    html += '</tr>';
-  });
-
-  html += '</tbody></table>';
-  grid.innerHTML = html;
 }
 </script>
 <script src="/dashboard-api.js"></script>

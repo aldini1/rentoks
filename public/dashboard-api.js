@@ -389,8 +389,28 @@ async function loadEarnings() {
   } catch(err) { console.error('Earnings error:', err); }
 }
 
-// ── Load Calendar (real data) ──
-async function loadCalendar() {
+// ── Toggle Block (kliko datë të lirë = bloko, kliko bllokuar = hiq) ──
+async function toggleBlock(vehicleId, dateStr, blockId) {
+  try {
+    if (blockId) {
+      await apiCall(`/businesses/blocks/${blockId}`, 'DELETE');
+      dashToast('Bllokimi u hoq. ✓', 'neutral');
+    } else {
+      await apiCall('/businesses/blocks', 'POST', {
+        vehicle_id: vehicleId,
+        date: dateStr,
+        reason: 'Bllokuar manualisht'
+      });
+      dashToast('Data u bllokua. 🔒', 'success');
+    }
+    loadCalendarReal();
+  } catch(err) {
+    dashToast(err.message, 'error');
+  }
+}
+
+// ── Load Calendar Real (3 ngjyra: E gjelbër / E kuqe / Portokalli) ──
+async function loadCalendarReal() {
   const grid = document.getElementById('calendar-grid');
   if (!grid) return;
   grid.innerHTML = '<div style="padding:32px;text-align:center;color:var(--gray);">Duke ngarkuar...</div>';
@@ -406,53 +426,106 @@ async function loadCalendar() {
       return;
     }
 
-    const days = 14;
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    // Ngarko blokimet paralel (fail gracefully nëse tabela nuk ekziston akoma)
+    const blockResults = await Promise.allSettled(
+      vehicles.map(v => apiCall(`/businesses/blocks/${v.id}`))
+    );
 
-    // Build booked date ranges per vehicle
-    const bookedDays = {}; // vehicleId → Set of date strings
+    // Map "vehicleId_dateStr" → true  (rezervime nga platforma)
+    const bookedDates = {};
     bookings.forEach(b => {
       if (b.status === 'cancelled' || b.status === 'completed') return;
-      if (!bookedDays[b.vehicle_id]) bookedDays[b.vehicle_id] = new Set();
-      const from = new Date(b.from_date);
-      const to = new Date(b.to_date);
-      from.setHours(0,0,0,0);
-      to.setHours(0,0,0,0);
+      const from = new Date(b.from_date); from.setHours(0,0,0,0);
+      const to   = new Date(b.to_date);   to.setHours(0,0,0,0);
       for (let d = new Date(from); d <= to; d.setDate(d.getDate() + 1)) {
-        bookedDays[b.vehicle_id].add(d.toISOString().split('T')[0]);
+        bookedDates[`${b.vehicle_id}_${d.toISOString().split('T')[0]}`] = true;
       }
     });
 
+    // Map "vehicleId_dateStr" → blockId  (blokime manuale)
+    const blockedDates = {};
+    blockResults.forEach(res => {
+      if (res.status === 'fulfilled') {
+        res.value.forEach(bl => {
+          const ds = (bl.date || '').split('T')[0];
+          if (ds) blockedDates[`${bl.vehicle_id}_${ds}`] = bl.id;
+        });
+      }
+    });
+
+    const days = 14;
+    const today = new Date(); today.setHours(0,0,0,0);
     const dayNames = ['Di','Hë','Ma','Më','En','Pr','Sh'];
 
-    let html = `<table style="border-collapse:collapse;min-width:600px;width:100%;">
+    let html = `<table style="border-collapse:collapse;min-width:620px;width:100%;">
       <thead><tr>
-        <th style="padding:10px 16px;font-size:11px;font-weight:700;text-align:left;color:var(--gray);text-transform:uppercase;letter-spacing:.8px;background:var(--paper);border-bottom:1px solid var(--border);">Vetura</th>`;
+        <th style="padding:10px 16px;font-size:11px;font-weight:700;text-align:left;color:var(--gray);
+                   text-transform:uppercase;letter-spacing:.8px;background:var(--paper);
+                   border-bottom:1px solid var(--border);min-width:150px;">Vetura</th>`;
 
     for (let i = 0; i < days; i++) {
-      const d = new Date(today);
-      d.setDate(today.getDate() + i);
+      const d = new Date(today); d.setDate(today.getDate() + i);
       const isToday = i === 0;
-      html += `<th style="padding:8px 4px;font-size:10px;font-weight:700;text-align:center;color:${isToday?'var(--ink)':'var(--gray)'};background:var(--paper);border-bottom:1px solid var(--border);min-width:36px;">${d.getDate()}<br><span style="font-weight:400;">${dayNames[d.getDay()]}</span></th>`;
+      html += `<th style="padding:8px 4px;font-size:10px;font-weight:700;text-align:center;
+                          color:${isToday?'var(--ink)':'var(--gray)'};background:var(--paper);
+                          border-bottom:1px solid var(--border);min-width:38px;">
+                 ${d.getDate()}<br><span style="font-weight:400;">${dayNames[d.getDay()]}</span>
+               </th>`;
     }
     html += '</tr></thead><tbody>';
 
     vehicles.forEach(v => {
-      const vBooked = bookedDays[v.id] || new Set();
       html += `<tr>
-        <td style="padding:10px 16px;font-size:13px;font-weight:600;color:var(--ink);border-bottom:1px solid var(--border);white-space:nowrap;">${v.brand} ${v.model} ${v.year}</td>`;
+        <td style="padding:10px 16px;font-size:13px;font-weight:600;color:var(--ink);
+                   border-bottom:1px solid var(--border);white-space:nowrap;">
+          ${v.brand} ${v.model} ${v.year}
+        </td>`;
+
       for (let i = 0; i < days; i++) {
-        const d = new Date(today);
-        d.setDate(today.getDate() + i);
+        const d = new Date(today); d.setDate(today.getDate() + i);
         const dateStr = d.toISOString().split('T')[0];
         const isToday = i === 0;
-        const isBooked = vBooked.has(dateStr);
-        let bg = isToday ? 'var(--lime)' : isBooked ? 'var(--red-light)' : 'var(--green-light)';
-        let border = isToday ? 'var(--lime2)' : isBooked ? '#fca5a5' : '#86efac';
-        const label = isBooked ? 'I rezervuar' : 'I lirë';
+        const key = `${v.id}_${dateStr}`;
+
+        const isPlatformBooked = !!bookedDates[key];
+        const blockId = blockedDates[key] || null;
+        const isManualBlock = !!blockId;
+
+        let bg, borderColor, cursor, onclick, titleTxt, ring = '';
+
+        if (isPlatformBooked) {
+          // 🔴 E kuqe — rezervim aktiv nga platforma
+          bg = 'var(--red-light)'; borderColor = '#fca5a5';
+          cursor = 'default';
+          onclick = `dashToast('Rezervim aktiv i platformës — ${v.brand} ${v.model}','neutral')`;
+          titleTxt = 'Rezervim i platformës';
+        } else if (isManualBlock) {
+          // 🟠 Portokalli — bllokuar manualisht, kliko për të hequr
+          bg = '#fed7aa'; borderColor = '#fb923c';
+          cursor = 'pointer';
+          onclick = `toggleBlock(${v.id},'${dateStr}',${blockId})`;
+          titleTxt = 'Bllokuar manualisht — kliko prër të hequr';
+        } else {
+          // 🟢 E gjelbër (lime sot) — i lirë, kliko për të bllokuar
+          bg = isToday ? 'var(--lime)' : 'var(--green-light)';
+          borderColor = isToday ? 'var(--lime2)' : '#86efac';
+          cursor = 'pointer';
+          onclick = `toggleBlock(${v.id},'${dateStr}',null)`;
+          titleTxt = isToday ? 'Sot — kliko prër të bllokuar' : 'I lirë — kliko prër të bllokuar';
+        }
+
+        // Unazë lime për ditën e sotme edhe kur është e zënë
+        if (isToday && (isPlatformBooked || isManualBlock)) {
+          ring = 'outline:2px solid var(--lime);outline-offset:-2px;';
+        }
+
         html += `<td style="padding:4px;border-bottom:1px solid var(--border);text-align:center;">
-          <div style="width:28px;height:28px;border-radius:6px;background:${bg};border:1px solid ${border};margin:0 auto;cursor:pointer;" onclick="dashToast('${label} — ${v.brand} ${v.model} (${dateStr})')" title="${label}"></div>
+          <div style="width:28px;height:28px;border-radius:6px;background:${bg};
+                      border:1.5px solid ${borderColor};margin:0 auto;
+                      cursor:${cursor};transition:opacity .15s;${ring}"
+               onmouseover="if(this.style.cursor!='default')this.style.opacity='.7'"
+               onmouseout="this.style.opacity='1'"
+               onclick="${onclick}" title="${titleTxt}"></div>
         </td>`;
       }
       html += '</tr>';
@@ -460,11 +533,15 @@ async function loadCalendar() {
 
     html += '</tbody></table>';
     grid.innerHTML = html;
+
   } catch(err) {
-    grid.innerHTML = '<div style="padding:32px;text-align:center;color:var(--red);">Gabim në ngarkimin e kalendarit.</div>';
+    grid.innerHTML = `<div style="padding:32px;text-align:center;color:var(--red);">Gabim: ${err.message}</div>`;
     console.error('Calendar error:', err);
   }
 }
+
+// Alias — goPage('calendar') thërret loadCalendar()
+function loadCalendar() { loadCalendarReal(); }
 
 // ── Init ──
 document.addEventListener('DOMContentLoaded', () => {

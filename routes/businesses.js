@@ -227,4 +227,78 @@ router.get('/stats', authMiddleware, bizOnly, async (req, res) => {
   }
 });
 
+// ── AVAILABILITY BLOCKS ──
+
+// GET /api/businesses/blocks/:vehicle_id — merr blokimet e një veture
+router.get('/blocks/:vehicle_id', authMiddleware, bizOnly, async (req, res) => {
+  try {
+    const { vehicle_id } = req.params;
+    const check = await pool.query(
+      'SELECT id FROM vehicles WHERE id=$1 AND business_id=$2',
+      [vehicle_id, req.user.id]
+    );
+    if (check.rows.length === 0)
+      return res.status(404).json({ error: 'Vetura nuk u gjet.' });
+
+    const result = await pool.query(
+      `SELECT id, vehicle_id, business_id, date::text, reason, created_at
+       FROM availability_blocks
+       WHERE vehicle_id=$1 AND business_id=$2
+       ORDER BY date`,
+      [vehicle_id, req.user.id]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Gabim serveri.' });
+  }
+});
+
+// POST /api/businesses/blocks — bloko një datë
+router.post('/blocks', authMiddleware, bizOnly, async (req, res) => {
+  try {
+    const { vehicle_id, date, reason } = req.body;
+    if (!vehicle_id || !date)
+      return res.status(400).json({ error: 'vehicle_id dhe date janë të detyrueshme.' });
+
+    const check = await pool.query(
+      'SELECT id FROM vehicles WHERE id=$1 AND business_id=$2',
+      [vehicle_id, req.user.id]
+    );
+    if (check.rows.length === 0)
+      return res.status(404).json({ error: 'Vetura nuk u gjet.' });
+
+    const result = await pool.query(
+      `INSERT INTO availability_blocks (vehicle_id, business_id, date, reason)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT (vehicle_id, date) DO NOTHING
+       RETURNING id, vehicle_id, business_id, date::text, reason, created_at`,
+      [vehicle_id, req.user.id, date, reason || null]
+    );
+    res.status(201).json({ message: 'Data u bllokua!', block: result.rows[0] || null });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Gabim serveri.' });
+  }
+});
+
+// DELETE /api/businesses/blocks/:id — zhbloko
+router.delete('/blocks/:id', authMiddleware, bizOnly, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const check = await pool.query(
+      'SELECT id FROM availability_blocks WHERE id=$1 AND business_id=$2',
+      [id, req.user.id]
+    );
+    if (check.rows.length === 0)
+      return res.status(404).json({ error: 'Bllokimi nuk u gjet.' });
+
+    await pool.query('DELETE FROM availability_blocks WHERE id=$1', [id]);
+    res.json({ message: 'Bllokimi u hoq.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Gabim serveri.' });
+  }
+});
+
 module.exports = router;
