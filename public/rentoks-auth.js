@@ -121,14 +121,23 @@ function updateNavUI(user) {
   const registerBtn = document.querySelector('.n-cta');
 
   if (!user) {
-    if (loginBtn) { loginBtn.textContent = 'Hyr'; loginBtn.onclick = () => openModalAuth('login'); }
-    if (registerBtn) { registerBtn.textContent = 'Regjistro Agjencinë'; registerBtn.onclick = () => openModalAuth('reg-biz'); }
+    if (loginBtn) {
+      loginBtn.removeAttribute('onclick');
+      loginBtn.textContent = 'Hyr';
+      loginBtn.onclick = () => openModalAuth('login');
+    }
+    if (registerBtn) {
+      registerBtn.removeAttribute('onclick');
+      registerBtn.textContent = 'Regjistro Agjencinë';
+      registerBtn.onclick = () => openModalAuth('reg-biz');
+    }
     return;
   }
 
   // Klient i kyçur
   if (user.type === 'user') {
     if (loginBtn) {
+      loginBtn.removeAttribute('onclick');
       loginBtn.textContent = `${user.first_name || user.name} ▾`;
       loginBtn.onclick = (e) => { e.stopPropagation(); toggleNavDropdown('client'); };
     }
@@ -141,6 +150,7 @@ function updateNavUI(user) {
   // Biznes i kyçur
   if (user.type === 'business') {
     if (loginBtn) {
+      loginBtn.removeAttribute('onclick');
       loginBtn.textContent = `${user.name || user.business_name} ▾`;
       loginBtn.onclick = (e) => { e.stopPropagation(); toggleNavDropdown('business'); };
     }
@@ -443,26 +453,25 @@ async function loadMyBookings() {
 
 // ── Init on page load ──
 document.addEventListener('DOMContentLoaded', () => {
+  // 1. Vendos handler-at bazë me .onclick (jo addEventListener)
+  //    kështu updateNavUI i mbishkruan pastër pa konflikte.
+  document.querySelectorAll('[onclick*="openM(\'login\')"]').forEach(btn => {
+    btn.removeAttribute('onclick');
+    btn.onclick = () => openModalAuth('login');
+  });
+  document.querySelectorAll('[onclick*="openM(\'reg-biz\')"]').forEach(btn => {
+    btn.removeAttribute('onclick');
+    btn.onclick = () => openModalAuth('reg-biz');
+  });
+
+  // 2. Nëse useri është i kyçur, mbishkruaj butonin me dropdown
   const user = Auth.getUser();
   if (user) updateNavUI(user);
 
-  // Mbyll dropdown kur klikohet jashtë tij
+  // 3. Mbyll dropdown kur klikohet jashtë
   document.addEventListener('click', (e) => {
     if (!e.target.closest('#nav-dropdown') && !e.target.closest('.n-ghost')) {
       closeNavDropdown();
     }
-  });
-
-  // Override modal buttons të ekzistueshëm
-  const loginBtns = document.querySelectorAll('[onclick*="openM(\'login\')"]');
-  loginBtns.forEach(btn => {
-    btn.removeAttribute('onclick');
-    btn.addEventListener('click', () => openModalAuth('login'));
-  });
-
-  const bizBtns = document.querySelectorAll('[onclick*="openM(\'reg-biz\')"]');
-  bizBtns.forEach(btn => {
-    btn.removeAttribute('onclick');
-    btn.addEventListener('click', () => openModalAuth('reg-biz'));
   });
 });

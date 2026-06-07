@@ -54,22 +54,20 @@ input,select{font-family:var(--f-b);}
 .n-cta:hover{background:var(--ink2);transform:translateY(-1px);}
 
 /* ── NAV DROPDOWN ── */
-.nav-dd{
-  position:absolute;top:calc(100% + 10px);right:0;
+#nav-dropdown{
+  position:fixed;top:56px;right:16px;
   background:#ffffff;border:1.5px solid var(--border);
   border-radius:12px;padding:6px;min-width:210px;
-  box-shadow:0 8px 32px rgba(0,0,0,.10),0 2px 8px rgba(0,0,0,.06);
-  z-index:500;opacity:0;pointer-events:none;
-  transform:translateY(-6px);transition:opacity .18s,transform .18s;
+  box-shadow:0 8px 32px rgba(0,0,0,.12),0 2px 8px rgba(0,0,0,.06);
+  z-index:500;display:none;
 }
-.nav-dd.open{opacity:1;pointer-events:all;transform:translateY(0);}
-.nav.hero-zone .nav-dd{border-color:rgba(255,255,255,.12);}
+#nav-dropdown.open{display:block;}
 .nav-dd-item{
   display:flex;align-items:center;gap:10px;width:100%;
   padding:9px 12px;border:none;background:transparent;
   border-radius:8px;font-size:13px;font-weight:500;
   color:var(--gray2);cursor:pointer;text-align:left;
-  transition:background .12s,color .12s;font-family:var(--f-b);
+  font-family:var(--f-b);
 }
 .nav-dd-item:hover{background:var(--paper);color:var(--ink);}
 .nav-dd-item.danger{color:var(--red);}
@@ -441,7 +439,6 @@ footer{background:var(--ink);color:white;padding:64px 0 36px;}
   <div class="nav-r">
     <button class="n-ghost" onclick="openM('login')">Hyr</button>
     <button class="n-cta" onclick="openM('reg-biz')">Regjistro Agjencinë</button>
-    <div class="nav-dd" id="nav-dropdown"></div>
   </div>
 </nav>
 
@@ -1107,5 +1104,6 @@ async function submitBooking() {
   }
 }
 </script>
+<div id="nav-dropdown"></div>
 </body>
 </html>
