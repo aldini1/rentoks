@@ -518,18 +518,18 @@ footer{background:var(--ink);color:white;padding:64px 0 36px;}
     <!-- Airbnb-style search bar -->
     <div class="srch-bar" id="srch-bar">
       <button class="srch-pill" id="sp-city-btn" onclick="toggleSP('city')">
-        <span class="srch-pill-label">📍 Ku po shkon?</span>
-        <span class="srch-pill-val ph" id="sp-city-val">Zgjedh qytetin</span>
+        <span class="srch-pill-label">📍 Qyteti</span>
+        <span class="srch-pill-val ph" id="sp-city-val">Zgjidh qytetin...</span>
       </button>
       <div class="srch-div"></div>
       <button class="srch-pill" id="sp-from-btn" onclick="toggleSP('cal')">
-        <span class="srch-pill-label">📅 Marrja</span>
-        <span class="srch-pill-val ph" id="sp-from-val">Shto datë</span>
+        <span class="srch-pill-label">📅 Nga</span>
+        <span class="srch-pill-val ph" id="sp-from-val">Zgjidh datën...</span>
       </button>
       <div class="srch-div"></div>
       <button class="srch-pill" id="sp-to-btn" onclick="toggleSP('cal')">
-        <span class="srch-pill-label">📅 Kthimi</span>
-        <span class="srch-pill-val ph" id="sp-to-val">Shto datë</span>
+        <span class="srch-pill-label">📅 Deri</span>
+        <span class="srch-pill-val ph" id="sp-to-val">Zgjidh datën...</span>
       </button>
       <button class="srch-btn" onclick="doSearch()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -1037,7 +1037,7 @@ function pickDay(ts){
   const fEl=document.getElementById('sp-from-val'), tEl=document.getElementById('sp-to-val');
   if(_srchFrom){fEl.textContent=fmt(_srchFrom);fEl.classList.remove('ph');}
   if(_srchTo){tEl.textContent=fmt(_srchTo);tEl.classList.remove('ph');setTimeout(closeSP,380);}
-  else{tEl.textContent='Shto datë';tEl.classList.add('ph');}
+  else{tEl.textContent='Zgjidh datën...';tEl.classList.add('ph');}
   renderCal();
 }
 function fmt(d){return d.toLocaleDateString('sq-AL',{day:'numeric',month:'short'});}
