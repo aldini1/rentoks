@@ -851,16 +851,13 @@ tr:hover td{background:var(--paper);}
     <!-- ══ CLIENTS ══ -->
     <div class="page" id="page-clients">
       <div class="page-header">
-        <div class="ph-left"><div class="ph-title">Klientët</div><div class="ph-sub">48 klientë unikë deri tani</div></div>
+        <div class="ph-left"><div class="ph-title">Klientët</div><div class="ph-sub">Duke ngarkuar...</div></div>
       </div>
       <div class="section-card">
         <table>
           <thead><tr><th>Klienti</th><th>Email</th><th>Telefoni</th><th>Rezervime</th><th>Shpenzuar total</th><th>I fundit</th></tr></thead>
-          <tbody>
-            <tr><td><div class="td-client"><div class="td-av"><img src="https://i.pravatar.cc/28?img=11" alt=""/></div><div class="td-name">Ardi Krasniqi</div></div></td><td>ardi@email.com</td><td>+383 44 111 222</td><td>4</td><td><strong>€420</strong></td><td>5 Qer 2026</td></tr>
-            <tr><td><div class="td-client"><div class="td-av"><img src="https://i.pravatar.cc/28?img=22" alt=""/></div><div class="td-name">Blerta Hoxha</div></div></td><td>blerta@email.com</td><td>+49 176 111 222</td><td>2</td><td><strong>€750</strong></td><td>10 Qer 2026</td></tr>
-            <tr><td><div class="td-client"><div class="td-av"><img src="https://i.pravatar.cc/28?img=33" alt=""/></div><div class="td-name">Mentor Osmani</div></div></td><td>mentor@email.com</td><td>+383 45 333 444</td><td>3</td><td><strong>€390</strong></td><td>12 Qer 2026</td></tr>
-            <tr><td><div class="td-client"><div class="td-av"><img src="https://i.pravatar.cc/28?img=44" alt=""/></div><div class="td-name">Fitore Gashi</div></div></td><td>fitore@email.com</td><td>+383 44 555 666</td><td>1</td><td><strong>€130</strong></td><td>1 Qer 2026</td></tr>
+          <tbody id="clients-tbody">
+            <tr><td colspan="6" style="text-align:center;padding:32px;color:var(--gray);">Klikoni "Klientët" për të ngarkuar të dhënat.</td></tr>
           </tbody>
         </table>
       </div>
@@ -1008,6 +1005,7 @@ function goPage(id, btn) {
   if(id === 'bookings' && typeof loadAllBookings === 'function') loadAllBookings();
   if(id === 'earnings' && typeof loadEarnings === 'function') loadEarnings();
   if(id === 'calendar' && typeof loadCalendar === 'function') loadCalendar();
+  if(id === 'clients' && typeof loadClients === 'function') loadClients();
 }
 
 // ── SIDEBAR MOBILE ──

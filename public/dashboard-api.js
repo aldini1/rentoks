@@ -109,6 +109,73 @@ function checkDashboardAuth() {
   return true;
 }
 
+// ── Load Clients ──
+async function loadClients() {
+  const tbody = document.getElementById('clients-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--gray);">Duke ngarkuar...</td></tr>';
+
+  try {
+    const bookings = await apiCall('/businesses/bookings');
+
+    // Aggregate unique clients from bookings
+    const clientMap = {};
+    bookings.forEach(b => {
+      const uid = b.user_id;
+      if (!clientMap[uid]) {
+        clientMap[uid] = {
+          user_id: uid,
+          first_name: b.first_name,
+          last_name: b.last_name,
+          email: b.email || '—',
+          phone: b.phone || '—',
+          count: 0,
+          total: 0,
+          last_date: null
+        };
+      }
+      clientMap[uid].count++;
+      clientMap[uid].total += parseFloat(b.total) || 0;
+      const bd = new Date(b.from_date);
+      if (!clientMap[uid].last_date || bd > clientMap[uid].last_date) {
+        clientMap[uid].last_date = bd;
+      }
+    });
+
+    const clients = Object.values(clientMap);
+
+    // Update subtitle
+    const phSub = document.querySelector('#page-clients .ph-sub');
+    if (phSub) phSub.textContent = `${clients.length} klientë unikë`;
+
+    if (clients.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--gray);">Nuk ka klientë akoma.</td></tr>';
+      return;
+    }
+
+    // Sort by last booking date desc
+    clients.sort((a, b) => (b.last_date || 0) - (a.last_date || 0));
+
+    tbody.innerHTML = clients.map(c => `
+      <tr>
+        <td>
+          <div class="td-client">
+            <div class="td-av" style="background:var(--paper2);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;">👤</div>
+            <div class="td-name">${c.first_name} ${c.last_name}</div>
+          </div>
+        </td>
+        <td>${c.email}</td>
+        <td>${c.phone}</td>
+        <td>${c.count}</td>
+        <td><strong>€${c.total.toFixed(0)}</strong></td>
+        <td>${c.last_date ? c.last_date.toISOString().split('T')[0] : '—'}</td>
+      </tr>
+    `).join('');
+  } catch(err) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--red);">Gabim: ${err.message}</td></tr>`;
+  }
+}
+
 // ── Logout ──
 function dashLogout() {
   localStorage.removeItem('rentoks_token');
