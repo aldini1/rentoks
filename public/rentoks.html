@@ -169,20 +169,6 @@ input,select{font-family:var(--f-b);}
 .big-title{font-family:var(--f-d);font-size:clamp(36px,4vw,52px);font-weight:800;letter-spacing:-2px;line-height:1.05;color:var(--ink);}
 .big-title em{font-style:italic;color:var(--gray);}
 
-/* ══ CATEGORIES ══ */
-.cats-section{padding:80px 0 64px;background:var(--paper);}
-.cats-title-row{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:40px;}
-.link-more{font-size:14px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:6px;padding:10px 20px;border:1.5px solid var(--border2);border-radius:100px;transition:all .2s;}
-.link-more:hover{background:var(--ink);color:var(--white);border-color:var(--ink);}
-.cats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
-.cat{background:var(--white);border:1.5px solid var(--border);border-radius:16px;padding:28px 16px 20px;text-align:center;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;}
-.cat::before{content:'';position:absolute;inset:0;background:var(--lime);transform:scaleY(0);transform-origin:bottom;transition:transform .25s cubic-bezier(.4,0,.2,1);z-index:0;}
-.cat:hover::before{transform:scaleY(1);}
-.cat:hover{border-color:var(--lime);transform:translateY(-4px);}
-.cat *{position:relative;z-index:1;}
-.cat-icon{font-size:36px;margin-bottom:12px;display:block;}
-.cat-name{font-family:var(--f-d);font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px;letter-spacing:-.3px;}
-.cat-price{font-size:12px;color:var(--gray);}
 
 /* ══ FLEET ══ */
 .fleet-section{padding:0 0 80px;background:var(--paper);}
@@ -276,17 +262,6 @@ input,select{font-family:var(--f-b);}
 .btn-biz-g{padding:14px 24px;background:transparent;color:var(--ink);border:1.5px solid var(--border2);border-radius:12px;font-size:14px;font-weight:600;transition:all .15s;}
 .btn-biz-g:hover{border-color:var(--ink);}
 
-/* ══ CITIES ══ */
-.cities-section{padding:0 0 80px;background:var(--paper);}
-.cities-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:40px;}
-.city{border-radius:16px;overflow:hidden;cursor:pointer;border:1.5px solid var(--border);background:var(--white);transition:all .2s;}
-.city:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.08);border-color:var(--border2);}
-.city-cover{height:100px;overflow:hidden;position:relative;}
-.city-cover img{width:100%;height:100%;object-fit:cover;transition:transform .3s;}
-.city:hover .city-cover img{transform:scale(1.05);}
-.city-body{padding:14px;}
-.city-n{font-family:var(--f-d);font-size:14px;font-weight:800;letter-spacing:-.3px;color:var(--ink);margin-bottom:2px;}
-.city-s{font-size:11px;color:var(--gray);}
 
 /* ══ WHY ══ */
 .why-section{background:var(--paper2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:80px 0;}
@@ -417,19 +392,14 @@ footer{background:var(--ink);color:white;padding:64px 0 36px;}
   .hs-item:nth-child(even){border-right:none;}
   .wrap{padding:0 16px;}
   .proof-inner{flex-direction:column;align-items:flex-start;}
-  .cats-section,.fleet-section,.biz-section,.cities-section,.how-section,.testi-section{padding-top:48px;padding-bottom:48px;}
-  .cats-title-row{flex-direction:column;align-items:flex-start;gap:16px;}
-  .cats-grid{grid-template-columns:repeat(3,1fr);gap:8px;}
-  .cat{padding:18px 8px 14px;}.cat-icon{font-size:28px;}
+  .fleet-section,.biz-section,.how-section,.testi-section{padding-top:48px;padding-bottom:48px;}
   .fleet-header{flex-direction:column;align-items:flex-start;gap:12px;}
   .fleet-grid{grid-template-columns:1fr;}
   .testi-grid{grid-template-columns:1fr;}
   .how-top{flex-direction:column;align-items:flex-start;gap:16px;}
   .how-grid{grid-template-columns:1fr;}
   .why-grid{grid-template-columns:1fr 1fr;}
-  .cities-grid{grid-template-columns:repeat(2,1fr);}
-  .cities-grid .city:last-child{grid-column:span 2;}
-  .cta-inner{flex-direction:column;align-items:flex-start;}
+.cta-inner{flex-direction:column;align-items:flex-start;}
   .cta-btns{flex-direction:column;width:100%;}
   .btn-cta-p,.btn-cta-g{text-align:center;width:100%;}
   .footer-grid{grid-template-columns:1fr 1fr;gap:28px;}
@@ -442,7 +412,6 @@ footer{background:var(--ink);color:white;padding:64px 0 36px;}
   .why-grid{grid-template-columns:1fr;}
   .footer-grid{grid-template-columns:1fr;}
   .footer-grid>div:first-child{grid-column:span 1;}
-  .cats-grid{grid-template-columns:repeat(2,1fr);}
 }
 </style>
 </head>
@@ -455,7 +424,6 @@ footer{background:var(--ink);color:white;padding:64px 0 36px;}
     <li><a href="#fleet">Fleet</a></li>
     <li><a href="#si-funksionon">Si funksionon</a></li>
     <li><a href="#bizneset">Bizneset</a></li>
-    <li><a href="#qytetet">Qytetet</a></li>
   </ul>
   <div class="nav-r">
     <button class="n-ghost" onclick="openM('login')">Hyr</button>
@@ -535,12 +503,12 @@ footer{background:var(--ink);color:white;padding:64px 0 36px;}
     <span class="marquee-item">Rent a Car Kosovë</span><span class="marquee-item">Agjenci të Verifikuara</span>
     <span class="marquee-item">Rezervo Online</span><span class="marquee-item">Prishtinë</span>
     <span class="marquee-item">Prizren</span><span class="marquee-item">Pejë</span>
-    <span class="marquee-item">Anulim Falas</span><span class="marquee-item">Cash ose Kartë</span>
+    <span class="marquee-item">Cash ose Kartë</span>
     <span class="marquee-item">Rentoks KS</span>
     <span class="marquee-item">Rent a Car Kosovë</span><span class="marquee-item">Agjenci të Verifikuara</span>
     <span class="marquee-item">Rezervo Online</span><span class="marquee-item">Prishtinë</span>
     <span class="marquee-item">Prizren</span><span class="marquee-item">Pejë</span>
-    <span class="marquee-item">Anulim Falas</span><span class="marquee-item">Cash ose Kartë</span>
+    <span class="marquee-item">Cash ose Kartë</span>
     <span class="marquee-item">Rentoks KS</span>
   </div>
 </div>
@@ -561,33 +529,11 @@ footer{background:var(--ink);color:white;padding:64px 0 36px;}
         <div class="proof-count"><strong>500+</strong> klientë të kënaqur · Vlerësim <strong>4.9/5</strong></div>
       </div>
     </div>
-    <div class="proof-badges">
-      <div class="proof-badge"><span class="ic">🏢</span> Biznese të licensuara NUIS</div>
-      <div class="proof-badge"><span class="ic">🛡️</span> Pagesa të sigurta Stripe</div>
-      <div class="proof-badge"><span class="ic">🔄</span> Anulim falas 24h</div>
-    </div>
   </div>
 </div>
 
-<!-- CATEGORIES -->
-<section class="cats-section" id="fleet">
-  <div class="wrap">
-    <div class="cats-title-row rv">
-      <div><div class="eyebrow">Kategoritë</div><div class="big-title">Çfarë veture<br>po kërkon?</div></div>
-      <a href="#" class="link-more">Shiko fleet-in →</a>
-    </div>
-    <div class="cats-grid">
-      <div class="cat rv d1" onclick="filterByCat('Ekonomike')"><span class="cat-icon">🚗</span><div class="cat-name">Ekonomike</div><div class="cat-price">Nga €20/ditë</div></div>
-      <div class="cat rv d2" onclick="filterByCat('SUV')"><span class="cat-icon">🚙</span><div class="cat-name">SUV</div><div class="cat-price">Nga €45/ditë</div></div>
-      <div class="cat rv d3" onclick="filterByCat('Premium')"><span class="cat-icon">🏎️</span><div class="cat-name">Premium</div><div class="cat-price">Nga €80/ditë</div></div>
-      <div class="cat rv d4" onclick="filterByCat('Van')"><span class="cat-icon">🚐</span><div class="cat-name">Van</div><div class="cat-price">Nga €55/ditë</div></div>
-      <div class="cat rv d5" onclick="filterByCat('')"><span class="cat-icon">⚡</span><div class="cat-name">Elektrike</div><div class="cat-price">Nga €40/ditë</div></div>
-    </div>
-  </div>
-</section>
-
 <!-- FLEET -->
-<section class="fleet-section">
+<section class="fleet-section" id="fleet">
   <div class="wrap">
     <div class="fleet-header rv">
       <div><div class="eyebrow">Fleet</div><div class="big-title">Vetura<br><em>disponueshme tani</em></div></div>
@@ -595,10 +541,7 @@ footer{background:var(--ink);color:white;padding:64px 0 36px;}
     </div>
     <div class="filter-bar rv" id="filter-bar">
       <button class="fpill on" onclick="filterByCat('')" data-cat="">Të gjitha</button>
-      <button class="fpill" onclick="filterByCat('Prishtinë')" data-city="Prishtinë">Prishtinë</button>
-      <button class="fpill" onclick="filterByCat('Prizren')" data-city="Prizren">Prizren</button>
-      <button class="fpill" onclick="filterByCat('Pejë')" data-city="Pejë">Pejë</button>
-      <button class="fpill" onclick="filterByCat('Ekonomike')" data-cat="Ekonomike">Automatik</button>
+      <button class="fpill" onclick="filterByCat('Automatik')" data-cat="Automatik">Automatik</button>
       <button class="fpill" onclick="filterByPrice(40)" data-price="40">Nën €40</button>
       <button class="fpill" onclick="filterByCat('SUV')" data-cat="SUV">SUV</button>
       <button class="fpill" onclick="filterByCat('Premium')" data-cat="Premium">Premium</button>
@@ -769,7 +712,7 @@ footer{background:var(--ink);color:white;padding:64px 0 36px;}
       <div><div class="eyebrow how-eyebrow">Procesi</div><div class="how-title">Si funksionon<br><span class="acc">Rentoks?</span></div></div>
     </div>
     <div class="how-grid">
-      <div class="how-step rv d1"><div class="step-idx">01</div><div class="step-tag">Hapi 01</div><span class="step-ic">🔍</span><div class="step-t">Kërko & Krahaso</div><p class="step-d">Zgjidh qytetin dhe datat. Krahaso çmimet nga agjenci të verifikuara me NUIS.</p></div>
+      <div class="how-step rv d1"><div class="step-idx">01</div><div class="step-tag">Hapi 01</div><span class="step-ic">🔍</span><div class="step-t">Kërko & Krahaso</div><p class="step-d">Zgjidh qytetin dhe datat. Krahaso çmimet nga agjenci të verifikuara.</p></div>
       <div class="how-step rv d2"><div class="step-idx">02</div><div class="step-tag">Hapi 02</div><span class="step-ic">💳</span><div class="step-t">Rezervo & Paguaj</div><p class="step-d">Paguaj online me kartë ose zgjedh cash direkt tek agjencia. Konfirmim i menjëhershëm.</p></div>
       <div class="how-step rv d3"><div class="step-idx">03</div><div class="step-tag">Hapi 03</div><span class="step-ic">🚗</span><div class="step-t">Merr & Shijo</div><p class="step-d">Trego konfirmimin dhe merr çelësat. Agjencia mund të sjellë veturën direkt tek ti.</p></div>
     </div>
@@ -792,13 +735,13 @@ footer{background:var(--ink);color:white;padding:64px 0 36px;}
       <div class="biz-content rv d2">
         <div class="eyebrow">Për Agjencitë</div>
         <div class="biz-title">Listo flotën.<br>Rrit rezervimet.<br><em style="color:var(--gray)">Shumë thjeshtë.</em></div>
-        <p class="biz-desc">Rentoks është platforma e parë në Kosovë që lidh agjencitë e licensuara me mijëra klientë çdo muaj. Falas të fillosh.</p>
+        <p class="biz-desc">Rentoks është platforma e parë në Kosovë që lidh agjencitë e verifikuara me mijëra klientë çdo muaj. Falas të fillosh.</p>
         <ul class="biz-list">
           <li><div class="chk">✓</div><span>Regjistrim falas — pa kosto fillestare, pa kontratë</span></li>
           <li><div class="chk">✓</div><span>Dashboard i plotë — menaxho flotën, çmimet dhe disponueshmërinë</span></li>
-          <li><div class="chk">✓</div><span>Pagesa online përmes Stripe — direkt në llogarinë tënde</span></li>
+          <li><div class="chk">✓</div><span>Pagesa online me kartë — direkt në llogarinë tënde</span></li>
           <li><div class="chk">✓</div><span>Komision 10% vetëm kur bën rezervim — asgjë ndryshe</span></li>
-          <li><div class="chk">✓</div><span>Vetëm biznese me NUIS dhe licencë operative pranohen</span></li>
+          <li><div class="chk">✓</div><span>Vetëm biznese me licencë operative pranohen</span></li>
         </ul>
         <div class="biz-btns">
           <button class="btn-biz-p" onclick="openM('reg-biz')">Regjistro Agjencinë →</button>
@@ -809,28 +752,14 @@ footer{background:var(--ink);color:white;padding:64px 0 36px;}
   </div>
 </section>
 
-<!-- CITIES -->
-<section class="cities-section" id="qytetet">
-  <div class="wrap">
-    <div class="rv"><div class="eyebrow">Lokacionet</div><div class="big-title">Gjithë Kosova,<br><em>një platformë.</em></div></div>
-    <div class="cities-grid">
-      <a class="city rv d1" href="#"><div class="city-cover"><img src="https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=300&q=80" alt="Prishtinë"/></div><div class="city-body"><div class="city-n">Prishtinë</div><div class="city-s">Kryeqyteti</div></div></a>
-      <a class="city rv d2" href="#"><div class="city-cover"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&q=80" alt="Prizren"/></div><div class="city-body"><div class="city-n">Prizren</div><div class="city-s">Historike</div></div></a>
-      <a class="city rv d3" href="#"><div class="city-cover"><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300&q=80" alt="Pejë"/></div><div class="city-body"><div class="city-n">Pejë</div><div class="city-s">Alpet</div></div></a>
-      <a class="city rv d4" href="#"><div class="city-cover"><img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=300&q=80" alt="Mitrovicë"/></div><div class="city-body"><div class="city-n">Mitrovicë</div><div class="city-s">Veriu</div></div></a>
-      <a class="city rv d5" href="#"><div class="city-cover"><img src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=300&q=80" alt="Gjakovë"/></div><div class="city-body"><div class="city-n">Gjakovë</div><div class="city-s">Çarshia</div></div></a>
-    </div>
-  </div>
-</section>
-
 <!-- WHY -->
 <section class="why-section">
   <div class="wrap">
     <div class="rv"><div class="eyebrow">Pse Rentoks</div><div class="big-title">Ndërtuar për<br>besim total.</div></div>
     <div class="why-grid">
-      <div class="why-card rv d1"><div class="why-ic">🏢</div><div class="why-t">Vetëm Biznese Ligjore</div><p class="why-d">Çdo agjenci kalon verifikim NUIS + licencë operative. Pa individë, pa rrezik.</p></div>
-      <div class="why-card rv d2"><div class="why-ic">💳</div><div class="why-t">Pagesa Fleksibile</div><p class="why-d">Kartë online ose cash në marrje — ti zgjedh. Stripe për transaksione të sigurta.</p></div>
-      <div class="why-card rv d3"><div class="why-ic">🔄</div><div class="why-t">Anulim Falas</div><p class="why-d">Anulo pa kosto deri 24 orë para marrjes. Transparencë totale.</p></div>
+      <div class="why-card rv d1"><div class="why-ic">🏢</div><div class="why-t">Vetëm Biznese Ligjore</div><p class="why-d">Çdo agjenci kalon verifikim dhe licencë operative. Pa individë, pa rrezik.</p></div>
+      <div class="why-card rv d2"><div class="why-ic">💳</div><div class="why-t">Pagesa Fleksibile</div><p class="why-d">Kartë online ose cash në marrje — ti zgjedh.</p></div>
+      <div class="why-card rv d3"><div class="why-ic">⚡</div><div class="why-t">Rezervim i Menjëhershëm</div><p class="why-d">Konfirmim brenda 60 sekondave. Merr çelësat pa pritje.</p></div>
       <div class="why-card rv d4"><div class="why-ic">📞</div><div class="why-t">Support 24/7</div><p class="why-d">Ekipi ynë është gati çdo orë nëse ke ndonjë problem me rezervimin.</p></div>
     </div>
   </div>
@@ -855,7 +784,7 @@ footer{background:var(--ink);color:white;padding:64px 0 36px;}
     <div class="footer-grid">
       <div>
         <div class="f-logo">Rent<span>oks</span></div>
-        <p class="f-desc">Marketplace i parë i car rental në Kosovë. Vetëm biznese të licensuara.</p>
+        <p class="f-desc">Marketplace i parë i car rental në Kosovë. Vetëm agjenci të verifikuara.</p>
         <div class="f-social">
           <a class="fsoc" href="https://facebook.com" target="_blank"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
           <a class="fsoc" href="https://instagram.com" target="_blank"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-width="2" stroke-linecap="round"/></svg></a>
@@ -1010,9 +939,9 @@ function openM(t) {
     <div class="fg"><label>Fjalëkalimi</label><input type="password" placeholder="••••••••"/></div>
     <button class="btn-mf">Krijo Llogarinë</button>`;
   } else if(t === 'reg-biz') {
-    b.innerHTML = `<div class="mh2">Regjistro Agjencinë</div><p class="msub">Vetëm biznese me NUIS dhe licencë operative. Verifikojmë brenda 24 orëve.</p>
+    b.innerHTML = `<div class="mh2">Regjistro Agjencinë</div><p class="msub">Vetëm biznese me licencë operative. Verifikojmë brenda 24 orëve.</p>
     <div class="fg"><label>Emri i Biznesit</label><input type="text" placeholder="p.sh. AutoPrishtina Rent"/></div>
-    <div class="fg"><label>NUIS</label><input type="text" placeholder="810xxxxxx"/></div>
+    <div class="fg"><label>Nr. Biznesit / Licenca</label><input type="text" placeholder="Numri i licencës"/></div>
     <div class="fg2"><div class="fg"><label>Email</label><input type="email" placeholder="info@agjencia.com"/></div><div class="fg"><label>Telefoni</label><input type="tel" placeholder="+383 44..."/></div></div>
     <div class="fg"><label>Qyteti kryesor</label><select><option>Prishtinë</option><option>Prizren</option><option>Pejë</option><option>Mitrovicë</option><option>Gjakovë</option><option>Ferizaj</option><option>Gjilan</option></select></div>
     <div class="fg"><label>Numri i veturave</label><input type="number" placeholder="p.sh. 10"/></div>
@@ -1036,7 +965,7 @@ function openM(t) {
       <div class="fg"><label>Marrja</label><input type="date" id="b-from" min="${today}" value="${from}" onchange="updateTotal()"/></div>
       <div class="fg"><label>Kthimi</label><input type="date" id="b-to" min="${today}" value="${to}" onchange="updateTotal()"/></div>
     </div>
-    <div class="fg"><label>Pagesa</label><select><option>Cash në marrje</option><option>Kartë online (Stripe)</option></select></div>
+    <div class="fg"><label>Pagesa</label><select><option>Cash në marrje</option><option>Kartë online</option></select></div>
     <div class="sum" id="book-sum">
       <div class="sum-r"><span class="sum-lbl">Çmimi / ditë</span><span class="sum-val">€${price}</span></div>
       <div class="sum-r"><span class="sum-lbl">Ditë</span><span class="sum-val" id="sum-days">${days}</span></div>
