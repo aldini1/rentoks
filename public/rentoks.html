@@ -98,33 +98,97 @@ input,select{font-family:var(--f-b);}
 .hero-h1 .lime{color:var(--lime);}
 .hero-desc{font-size:17px;color:rgba(255,255,255,.42);line-height:1.6;max-width:500px;margin-bottom:40px;}
 
-/* ── Search box horizontal ── */
-.search-box-h{
-  background:#ffffff;border-radius:16px;
-  box-shadow:0 24px 64px rgba(0,0,0,.55),0 4px 16px rgba(0,0,0,.25);
-  display:flex;align-items:stretch;
-  width:100%;max-width:820px;
-  padding:6px;margin-bottom:22px;
+/* ── Airbnb Search Bar ── */
+.srch-bar{
+  position:relative;background:#fff;border-radius:60px;
+  box-shadow:0 8px 40px rgba(0,0,0,.45),0 2px 12px rgba(0,0,0,.2);
+  display:flex;align-items:center;padding:8px;
+  width:100%;max-width:860px;margin-bottom:22px;
 }
-.sbh-field{flex:1;padding:14px 18px;display:flex;flex-direction:column;gap:5px;min-width:0;}
-.sbh-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--gray);}
-.sbh-field select,.sbh-field input{
-  border:none;outline:none;font-size:16px;font-weight:600;
-  color:var(--ink);background:transparent;width:100%;
-  font-family:var(--f-b);cursor:pointer;
+.srch-pill{
+  flex:1;padding:10px 20px;border-radius:50px;cursor:pointer;
+  transition:background .15s;display:flex;flex-direction:column;gap:3px;
+  border:none;background:transparent;text-align:left;font-family:var(--f-b);min-width:0;
 }
-.sbh-field select option{background:white;}
-.sbh-field input[type="date"]{color-scheme:light;}
-.sbh-div{width:1px;background:var(--border);margin:10px 0;flex-shrink:0;}
-.sbh-btn{
-  flex-shrink:0;background:var(--lime);color:var(--ink);
-  border-radius:12px;padding:0 28px;margin:0;
-  font-family:var(--f-d);font-size:15px;font-weight:800;letter-spacing:-.2px;
-  border:none;cursor:pointer;white-space:nowrap;
-  transition:all .2s;display:flex;align-items:center;gap:8px;
+.srch-pill:hover,.srch-pill.active{background:rgba(0,0,0,.05);}
+.srch-pill-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--gray);}
+.srch-pill-val{font-size:15px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.srch-pill-val.ph{color:var(--gray);font-weight:400;}
+.srch-div{width:1px;height:32px;background:var(--border2);flex-shrink:0;}
+.srch-btn{
+  flex-shrink:0;width:52px;height:52px;background:var(--lime);border-radius:50%;
+  border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
 }
-.sbh-btn:hover{background:var(--lime2);transform:translateY(-1px);}
-.sbh-btn svg{flex-shrink:0;}
+.srch-btn:hover{background:var(--lime2);transform:scale(1.05);}
+.srch-btn svg{width:20px;height:20px;stroke:var(--ink);}
+.srch-btn-lbl{display:none;font-family:var(--f-d);font-size:15px;font-weight:800;color:var(--ink);}
+
+/* ── Search Panels ── */
+.srch-panel{
+  position:absolute;top:calc(100% + 14px);background:#fff;
+  border-radius:24px;box-shadow:0 16px 60px rgba(0,0,0,.18),0 4px 16px rgba(0,0,0,.08);
+  z-index:410;opacity:0;transform:translateY(-8px);pointer-events:none;
+  transition:opacity .2s,transform .2s;
+}
+.srch-panel.open{opacity:1;transform:translateY(0);pointer-events:all;}
+
+/* City panel */
+.sp-city{left:0;width:520px;padding:20px;}
+.city-srch-inp{
+  width:100%;border:1.5px solid var(--border);border-radius:12px;
+  padding:10px 14px;font-family:var(--f-b);font-size:14px;
+  outline:none;margin-bottom:14px;color:var(--ink);background:var(--paper2);
+}
+.city-srch-inp:focus{border-color:var(--ink);background:#fff;}
+.city-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-height:260px;overflow-y:auto;}
+.city-item{
+  display:flex;align-items:center;gap:7px;padding:9px 11px;
+  border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;
+  color:var(--gray2);transition:all .12s;border:none;background:transparent;
+  font-family:var(--f-b);text-align:left;width:100%;
+}
+.city-item:hover{background:var(--paper2);color:var(--ink);}
+.city-item.sel{background:var(--lime);color:var(--ink);}
+.city-item .ci-em{font-size:17px;flex-shrink:0;}
+
+/* Calendar panel */
+.sp-cal{left:50%;transform:translateX(-50%) translateY(-8px);width:660px;padding:20px;}
+.sp-cal.open{transform:translateX(-50%) translateY(0);}
+.cal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.cal-nav{
+  width:32px;height:32px;border:1.5px solid var(--border);border-radius:50%;
+  background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:16px;transition:all .15s;color:var(--ink);
+}
+.cal-nav:hover:not(:disabled){border-color:var(--ink);}
+.cal-nav:disabled{opacity:.3;cursor:default;}
+.cal-months-wrap{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+.cal-mth-title{font-family:var(--f-d);font-size:14px;font-weight:800;color:var(--ink);text-align:center;margin-bottom:10px;letter-spacing:-.3px;}
+.cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px;}
+.cal-dow span{font-size:10px;font-weight:700;color:var(--gray);text-align:center;padding:3px 0;text-transform:uppercase;}
+.cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.cal-day{
+  aspect-ratio:1;border:none;background:transparent;border-radius:50%;
+  font-size:12px;font-weight:500;color:var(--ink);cursor:pointer;
+  transition:all .1s;display:flex;align-items:center;justify-content:center;
+  font-family:var(--f-b);
+}
+.cal-day:hover:not(.dis){background:var(--paper2);}
+.cal-day.dis{color:var(--border2);cursor:default;pointer-events:none;}
+.cal-day.today{font-weight:800;}
+.cal-day.in-range{background:rgba(200,255,0,.3);border-radius:0;}
+.cal-day.r-start,.cal-day.r-end{background:var(--lime);color:var(--ink);font-weight:700;}
+.cal-day.r-start{border-radius:50% 0 0 50%;}
+.cal-day.r-end{border-radius:0 50% 50% 0;}
+.cal-day.r-start.r-end{border-radius:50%;}
+.cal-empty{aspect-ratio:1;}
+.cal-info{text-align:center;margin-top:14px;font-size:13px;font-weight:500;color:var(--gray2);padding-top:14px;border-top:1px solid var(--border);}
+.cal-info strong{color:var(--ink);}
+
+/* Overlay */
+.srch-ov{position:fixed;inset:0;z-index:409;display:none;}
+.srch-ov.on{display:block;}
 
 /* ── Inline social proof ── */
 .hero-proof{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
@@ -356,7 +420,9 @@ footer{background:var(--ink);color:white;padding:64px 0 36px;}
 
 /* ══ RESPONSIVE ══ */
 @media(max-width:1024px){
-  .search-box-h{max-width:680px;}
+  .srch-bar{max-width:700px;}
+  .sp-city{width:420px;}
+  .sp-cal{width:520px;}
   .fleet-grid{grid-template-columns:repeat(2,1fr);}
   .biz-inner{grid-template-columns:1fr;gap:48px;}
   .testi-grid{grid-template-columns:1fr 1fr;}
@@ -372,12 +438,18 @@ footer{background:var(--ink);color:white;padding:64px 0 36px;}
   .hero-content{padding:88px 16px 48px;}
   .hero-h1{font-size:clamp(32px,9vw,46px);letter-spacing:-1.5px;}
   .hero-desc{font-size:15px;margin-bottom:28px;}
-  /* Search box → vertikal në mobile */
-  .search-box-h{flex-direction:column;padding:8px;gap:0;border-radius:14px;}
-  .sbh-field{padding:12px 14px;}
-  .sbh-field select,.sbh-field input{font-size:15px;}
-  .sbh-div{width:auto;height:1px;margin:0 6px;}
-  .sbh-btn{width:100%;justify-content:center;padding:14px;border-radius:10px;margin-top:4px;font-size:14px;}
+  /* Search bar → mobile */
+  .srch-bar{flex-direction:column;border-radius:20px;padding:8px;gap:2px;}
+  .srch-pill{border-radius:12px;padding:12px 16px;}
+  .srch-pill:hover,.srch-pill.active{background:var(--paper2);}
+  .srch-div{width:auto;height:1px;margin:0 8px;background:var(--border);}
+  .srch-btn{width:100%;border-radius:12px;height:48px;font-family:var(--f-d);font-size:15px;font-weight:800;gap:8px;}
+  .srch-btn-lbl{display:inline;}
+  .sp-city{width:calc(100vw - 32px);left:0;}
+  .sp-cal{width:calc(100vw - 32px);left:0;transform:translateY(-8px);}
+  .sp-cal.open{transform:translateY(0);}
+  .cal-months-wrap{grid-template-columns:1fr;}
+  .city-grid{grid-template-columns:repeat(2,1fr);}
   .hero-badges{gap:14px;}
   .hero-badge{font-size:12px;}
   .hero-strip{flex-wrap:wrap;}
@@ -443,52 +515,46 @@ footer{background:var(--ink);color:white;padding:64px 0 36px;}
     <h1 class="hero-h1">Merr veturën tënde<br>në <span class="lime">Kosovë</span></h1>
     <p class="hero-desc">Krahaso oferta nga agjenci të verifikuara. Rezervo në 60 sekonda, pa komisione të fshehura.</p>
 
-    <!-- Search box horizontal -->
-    <div class="search-box-h">
-      <div class="sbh-field">
-        <div class="sbh-label">📍 Qyteti</div>
-        <select id="s-city" onchange="filterCards()">
-          <option value="">Të gjitha qytetet</option>
-          <option value="Prishtinë">Prishtinë</option>
-          <option value="Prizren">Prizren</option>
-          <option value="Pejë">Pejë</option>
-          <option value="Mitrovicë">Mitrovicë</option>
-          <option value="Gjakovë">Gjakovë</option>
-          <option value="Ferizaj">Ferizaj</option>
-          <option value="Gjilan">Gjilan</option>
-          <option value="Vushtrri">Vushtrri</option>
-          <option value="Podujevë">Podujevë</option>
-          <option value="Suharekë">Suharekë</option>
-          <option value="Rahovec">Rahovec</option>
-          <option value="Malishevë">Malishevë</option>
-          <option value="Dragash">Dragash</option>
-          <option value="Skënderaj">Skënderaj</option>
-          <option value="Klinë">Klinë</option>
-          <option value="Istog">Istog</option>
-          <option value="Deçan">Deçan</option>
-          <option value="Junik">Junik</option>
-          <option value="Kaçanik">Kaçanik</option>
-          <option value="Shtimje">Shtimje</option>
-          <option value="Fushë Kosovë">Fushë Kosovë</option>
-          <option value="Lipjan">Lipjan</option>
-          <option value="Graçanicë">Graçanicë</option>
-        </select>
-      </div>
-      <div class="sbh-div"></div>
-      <div class="sbh-field">
-        <div class="sbh-label">📅 Data e marrjes</div>
-        <input type="date" id="s-from" onchange="calcDays()"/>
-      </div>
-      <div class="sbh-div"></div>
-      <div class="sbh-field">
-        <div class="sbh-label">📅 Data e kthimit</div>
-        <input type="date" id="s-to" onchange="calcDays()"/>
-      </div>
-      <button class="sbh-btn" onclick="doSearch()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        Kërko Veturë →
+    <!-- Airbnb-style search bar -->
+    <div class="srch-bar" id="srch-bar">
+      <button class="srch-pill" id="sp-city-btn" onclick="toggleSP('city')">
+        <span class="srch-pill-label">📍 Ku po shkon?</span>
+        <span class="srch-pill-val ph" id="sp-city-val">Zgjedh qytetin</span>
       </button>
+      <div class="srch-div"></div>
+      <button class="srch-pill" id="sp-from-btn" onclick="toggleSP('cal')">
+        <span class="srch-pill-label">📅 Marrja</span>
+        <span class="srch-pill-val ph" id="sp-from-val">Shto datë</span>
+      </button>
+      <div class="srch-div"></div>
+      <button class="srch-pill" id="sp-to-btn" onclick="toggleSP('cal')">
+        <span class="srch-pill-label">📅 Kthimi</span>
+        <span class="srch-pill-val ph" id="sp-to-val">Shto datë</span>
+      </button>
+      <button class="srch-btn" onclick="doSearch()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <span class="srch-btn-lbl">Kërko</span>
+      </button>
+
+      <!-- City panel -->
+      <div class="srch-panel sp-city" id="srch-panel-city">
+        <input class="city-srch-inp" id="city-srch-inp" placeholder="🔍 Kërko qytetin..." oninput="filterCityList(this.value)"/>
+        <div class="city-grid" id="city-grid"></div>
+      </div>
+
+      <!-- Calendar panel -->
+      <div class="srch-panel sp-cal" id="srch-panel-cal">
+        <div class="cal-hdr">
+          <button class="cal-nav" id="cal-prev" onclick="calMove(-1)">&#8249;</button>
+          <div style="flex:1"></div>
+          <button class="cal-nav" id="cal-next" onclick="calMove(1)">&#8250;</button>
+        </div>
+        <div class="cal-months-wrap" id="cal-months-wrap"></div>
+        <div class="cal-info" id="cal-info" style="display:none"></div>
+      </div>
     </div>
+    <!-- Search overlay -->
+    <div class="srch-ov" id="srch-ov" onclick="closeSP()"></div>
 
     <!-- Inline social proof -->
     <div class="hero-proof">
@@ -859,25 +925,123 @@ window.addEventListener('scroll', () => {
 const obs = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); }), {threshold:.08});
 document.querySelectorAll('.rv').forEach(el => obs.observe(el));
 
-// ── DATES ──
-const today = new Date().toISOString().split('T')[0];
-document.querySelectorAll('input[type=date]').forEach(i => i.min = today);
+// ── AIRBNB SEARCH ──
+const CITIES_DATA = [
+  {e:'🏙️',n:'Prishtinë'},{e:'🏰',n:'Prizren'},{e:'⛰️',n:'Pejë'},
+  {e:'🌆',n:'Mitrovicë'},{e:'🏛️',n:'Gjakovë'},{e:'🌇',n:'Ferizaj'},
+  {e:'🏘️',n:'Gjilan'},{e:'🏙️',n:'Vushtrri'},{e:'🌿',n:'Podujevë'},
+  {e:'🌄',n:'Suharekë'},{e:'🍇',n:'Rahovec'},{e:'🌾',n:'Malishevë'},
+  {e:'🏔️',n:'Dragash'},{e:'🌲',n:'Skënderaj'},{e:'🏞️',n:'Klinë'},
+  {e:'🌊',n:'Istog'},{e:'⛺',n:'Deçan'},{e:'🌳',n:'Junik'},
+  {e:'🚂',n:'Kaçanik'},{e:'🌻',n:'Shtimje'},{e:'🏭',n:'Fushë Kosovë'},
+  {e:'🌱',n:'Lipjan'},{e:'🕌',n:'Graçanicë'}
+];
+let _srchCity = '', _srchFrom = null, _srchTo = null, _calOff = 0;
 
-// ── PRICE CALCULATOR ──
-function calcDays() {
-  const from = document.getElementById('s-from').value;
-  const to = document.getElementById('s-to').value;
-  const preview = document.getElementById('days-preview');
-  if(from && to) {
-    const days = Math.ceil((new Date(to) - new Date(from)) / 86400000);
-    if(days > 0) {
-      preview.style.display = 'block';
-      preview.innerHTML = `📅 <strong>${days} ditë</strong> — çmimi total llogaritet automatikisht`;
-    } else {
-      preview.style.display = 'none';
-    }
+function renderCityGrid(list) {
+  document.getElementById('city-grid').innerHTML = list.map(c =>
+    `<button class="city-item${_srchCity===c.n?' sel':''}" onclick="pickCity('${c.n.replace(/'/g,"\\'")}')">
+      <span class="ci-em">${c.e}</span>${c.n}</button>`
+  ).join('');
+}
+function filterCityList(q) {
+  renderCityGrid(q ? CITIES_DATA.filter(c=>c.n.toLowerCase().includes(q.toLowerCase())) : CITIES_DATA);
+}
+function pickCity(name) {
+  _srchCity = name;
+  const v = document.getElementById('sp-city-val');
+  v.textContent = name; v.classList.remove('ph');
+  renderCityGrid(CITIES_DATA);
+  closeSP();
+}
+
+function toggleSP(type) {
+  const cp = document.getElementById('srch-panel-city');
+  const dp = document.getElementById('srch-panel-cal');
+  const ov = document.getElementById('srch-ov');
+  const cityOpen = cp.classList.contains('open');
+  const calOpen  = dp.classList.contains('open');
+  closeSP();
+  if (type==='city' && !cityOpen) {
+    cp.classList.add('open'); ov.classList.add('on');
+    document.getElementById('sp-city-btn').classList.add('active');
+    renderCityGrid(CITIES_DATA);
+    setTimeout(()=>document.getElementById('city-srch-inp').focus(),60);
+  } else if (type==='cal' && !calOpen) {
+    dp.classList.add('open'); ov.classList.add('on');
+    document.getElementById('sp-from-btn').classList.add('active');
+    document.getElementById('sp-to-btn').classList.add('active');
+    renderCal();
   }
 }
+function closeSP() {
+  ['srch-panel-city','srch-panel-cal','srch-ov'].forEach(id=>document.getElementById(id).classList.remove('open','on'));
+  ['sp-city-btn','sp-from-btn','sp-to-btn'].forEach(id=>document.getElementById(id).classList.remove('active'));
+}
+
+// Calendar
+function calMove(dir) {
+  _calOff = Math.max(0, _calOff + dir);
+  document.getElementById('cal-prev').disabled = _calOff === 0;
+  renderCal();
+}
+function renderCal() {
+  const now = new Date(); now.setHours(0,0,0,0);
+  const isMob = window.innerWidth < 769;
+  const n = isMob ? 1 : 2;
+  const wrap = document.getElementById('cal-months-wrap');
+  wrap.style.gridTemplateColumns = isMob ? '1fr' : '1fr 1fr';
+  wrap.innerHTML = '';
+  const DOW = ['Hë','Ma','Më','En','Pr','Sh','Di'];
+  for (let m = 0; m < n; m++) {
+    const base = new Date(now.getFullYear(), now.getMonth() + _calOff + m, 1);
+    const yr = base.getFullYear(), mo = base.getMonth();
+    const title = base.toLocaleString('sq-AL',{month:'long',year:'numeric'});
+    const firstDow = (new Date(yr,mo,1).getDay()+6)%7; // Mon=0
+    const dim = new Date(yr,mo+1,0).getDate();
+    let html = `<div><div class="cal-mth-title">${cap(title)}</div>
+      <div class="cal-dow">${DOW.map(d=>`<span>${d}</span>`).join('')}</div>
+      <div class="cal-days">`;
+    for(let i=0;i<firstDow;i++) html+=`<div class="cal-empty"></div>`;
+    for(let d=1;d<=dim;d++){
+      const dt=new Date(yr,mo,d); dt.setHours(0,0,0,0);
+      const ts=dt.getTime(), past=dt<now, isToday=ts===now.getTime();
+      let cls='cal-day';
+      if(past) cls+=' dis';
+      if(isToday) cls+=' today';
+      if(_srchFrom&&_srchTo){
+        const f=_srchFrom.getTime(),t=_srchTo.getTime();
+        if(ts===f&&ts===t) cls+=' r-start r-end';
+        else if(ts===f) cls+=' r-start';
+        else if(ts===t) cls+=' r-end';
+        else if(ts>f&&ts<t) cls+=' in-range';
+      } else if(_srchFrom&&ts===_srchFrom.getTime()) cls+=' r-start r-end';
+      html+=`<button class="${cls}"${past?' disabled':''}onclick="pickDay(${ts})">${d}</button>`;
+    }
+    html+=`</div></div>`;
+    wrap.innerHTML+=html;
+  }
+  const info=document.getElementById('cal-info');
+  if(_srchFrom&&_srchTo){
+    const days=Math.round((_srchTo-_srchFrom)/86400000);
+    info.style.display='block';
+    info.innerHTML=`<strong>${days}</strong> ditë · ${fmt(_srchFrom)} → ${fmt(_srchTo)}`;
+  } else if(_srchFrom){
+    info.style.display='block'; info.innerHTML=`Zgjidh datën e <strong>kthimit</strong>`;
+  } else { info.style.display='none'; }
+}
+function pickDay(ts){
+  const dt=new Date(ts);
+  if(!_srchFrom||(_srchFrom&&_srchTo)){ _srchFrom=dt; _srchTo=null; }
+  else { dt<_srchFrom?(_srchTo=_srchFrom,_srchFrom=dt):(_srchTo=dt); }
+  const fEl=document.getElementById('sp-from-val'), tEl=document.getElementById('sp-to-val');
+  if(_srchFrom){fEl.textContent=fmt(_srchFrom);fEl.classList.remove('ph');}
+  if(_srchTo){tEl.textContent=fmt(_srchTo);tEl.classList.remove('ph');setTimeout(closeSP,380);}
+  else{tEl.textContent='Shto datë';tEl.classList.add('ph');}
+  renderCal();
+}
+function fmt(d){return d.toLocaleDateString('sq-AL',{day:'numeric',month:'short'});}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 
 // ── FILTER ──
 function filterCards(cat, city, maxPrice) {
@@ -918,9 +1082,7 @@ document.querySelectorAll('.fpill').forEach(p => {
 
 // ── SEARCH ──
 function doSearch() {
-  const city = document.getElementById('s-city').value;
-  const cat = document.getElementById('s-cat').value;
-  filterCards(cat, city, null);
+  filterCards('', _srchCity, null);
   document.getElementById('fleet').scrollIntoView({behavior:'smooth'});
 }
 
@@ -970,17 +1132,18 @@ function openM(t) {
     <button class="btn-mf">Dërgo Kërkesën →</button>`;
   } else if(t === 'book') {
     const {name, biz, price} = bookCar;
-    const from = document.getElementById('s-from').value;
-    const to = document.getElementById('s-to').value;
+    const todayStr = new Date().toISOString().split('T')[0];
+    const fromStr = _srchFrom ? _srchFrom.toISOString().split('T')[0] : '';
+    const toStr   = _srchTo   ? _srchTo.toISOString().split('T')[0]   : '';
     let days = 1;
-    if(from && to) { const d = Math.ceil((new Date(to)-new Date(from))/86400000); if(d>0) days=d; }
+    if(_srchFrom && _srchTo) { const d = Math.round((_srchTo-_srchFrom)/86400000); if(d>0) days=d; }
     const total = price * days;
     b.innerHTML = `<div class="mh2">Rezervo Veturën</div><p class="msub">${name} · ${biz}</p>
     <div class="fg2"><div class="fg"><label>Emri</label><input type="text" placeholder="Emri"/></div><div class="fg"><label>Mbiemri</label><input type="text" placeholder="Mbiemri"/></div></div>
     <div class="fg"><label>Telefoni</label><input type="tel" placeholder="+383 44 000 000"/></div>
     <div class="fg2">
-      <div class="fg"><label>Marrja</label><input type="date" id="b-from" min="${today}" value="${from}" onchange="updateTotal()"/></div>
-      <div class="fg"><label>Kthimi</label><input type="date" id="b-to" min="${today}" value="${to}" onchange="updateTotal()"/></div>
+      <div class="fg"><label>Marrja</label><input type="date" id="b-from" min="${todayStr}" value="${fromStr}" onchange="updateTotal()"/></div>
+      <div class="fg"><label>Kthimi</label><input type="date" id="b-to" min="${todayStr}" value="${toStr}" onchange="updateTotal()"/></div>
     </div>
     <div class="fg"><label>Pagesa</label><select><option>Cash në marrje</option><option>Kartë online</option></select></div>
     <div class="sum" id="book-sum">
