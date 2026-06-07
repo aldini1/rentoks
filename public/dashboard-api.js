@@ -548,4 +548,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!checkDashboardAuth()) return;
   loadStats();
   loadBookings(); // overview table (top 5)
+
+  // Deep-link hash: /rentoks-dashboard.html#bookings → goPage('bookings')
+  const validPages = ['overview','bookings','fleet','earnings','calendar','clients','reviews','settings'];
+  const hash = window.location.hash.replace('#', '');
+  if (hash && validPages.includes(hash)) {
+    const btn = document.querySelector(`.sb-item[onclick*="'${hash}'"]`);
+    if (typeof goPage === 'function') goPage(hash, btn);
+  }
 });

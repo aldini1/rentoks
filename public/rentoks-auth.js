@@ -130,7 +130,7 @@ function updateNavUI(user) {
   if (user.type === 'user') {
     if (loginBtn) {
       loginBtn.textContent = `${user.first_name || user.name} ▾`;
-      loginBtn.onclick = () => openModalAuth('profile');
+      loginBtn.onclick = (e) => { e.stopPropagation(); toggleNavDropdown('client'); };
     }
     if (registerBtn) {
       registerBtn.textContent = 'Rezervimet mia';
@@ -141,16 +141,60 @@ function updateNavUI(user) {
   // Biznes i kyçur
   if (user.type === 'business') {
     if (loginBtn) {
-      loginBtn.textContent = `${user.name} ▾`;
-      loginBtn.onclick = () => { window.location.href = '/rentoks-dashboard.html'; };
+      loginBtn.textContent = `${user.name || user.business_name} ▾`;
+      loginBtn.onclick = (e) => { e.stopPropagation(); toggleNavDropdown('business'); };
     }
     if (registerBtn) {
       registerBtn.textContent = 'Dashboard →';
       registerBtn.style.background = 'var(--lime, #c8ff00)';
       registerBtn.style.color = '#0d0d0d';
-      registerBtn.onclick = () => { window.location.href = '/rentoks-dashboard.html'; };
+      registerBtn.onclick = () => { window.open('/rentoks-dashboard.html', '_blank'); };
     }
   }
+}
+
+// ── Nav Dropdown ──
+function toggleNavDropdown(type) {
+  const dd = document.getElementById('nav-dropdown');
+  if (!dd) return;
+
+  if (dd.classList.contains('open')) {
+    dd.classList.remove('open');
+    return;
+  }
+
+  if (type === 'business') {
+    dd.innerHTML = `
+      <button class="nav-dd-item" onclick="window.open('/rentoks-dashboard.html','_blank');closeNavDropdown()">🏢 Dashboard</button>
+      <button class="nav-dd-item" onclick="window.open('/rentoks-dashboard.html#bookings','_blank');closeNavDropdown()">📋 Rezervimet</button>
+      <hr class="nav-dd-sep"/>
+      <button class="nav-dd-item" onclick="window.open('/rentoks-dashboard.html#settings','_blank');closeNavDropdown()">⚙️ Cilësimet</button>
+      <hr class="nav-dd-sep"/>
+      <button class="nav-dd-item danger" onclick="doNavLogout()">↪ Çkyçu</button>
+    `;
+  } else {
+    dd.innerHTML = `
+      <button class="nav-dd-item" onclick="openModalAuth('profile');closeNavDropdown()">👤 Profili im</button>
+      <button class="nav-dd-item" onclick="openModalAuth('my-bookings');closeNavDropdown()">📋 Rezervimet mia</button>
+      <hr class="nav-dd-sep"/>
+      <button class="nav-dd-item danger" onclick="doNavLogout()">↪ Çkyçu</button>
+    `;
+  }
+
+  dd.classList.add('open');
+}
+
+function closeNavDropdown() {
+  const dd = document.getElementById('nav-dropdown');
+  if (dd) dd.classList.remove('open');
+}
+
+function doNavLogout() {
+  closeNavDropdown();
+  localStorage.removeItem('rentoks_token');
+  localStorage.removeItem('rentoks_user');
+  showToastAuth('U çkyçe me sukses.', 'neutral');
+  setTimeout(() => { window.location.href = '/'; }, 800);
 }
 
 // ── Open modal (override existing openM if exists) ──
@@ -401,6 +445,13 @@ async function loadMyBookings() {
 document.addEventListener('DOMContentLoaded', () => {
   const user = Auth.getUser();
   if (user) updateNavUI(user);
+
+  // Mbyll dropdown kur klikohet jashtë tij
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#nav-dropdown') && !e.target.closest('.n-ghost')) {
+      closeNavDropdown();
+    }
+  });
 
   // Override modal buttons të ekzistueshëm
   const loginBtns = document.querySelectorAll('[onclick*="openM(\'login\')"]');
