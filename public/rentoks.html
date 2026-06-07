@@ -126,6 +126,14 @@ input,select{font-family:var(--f-b);}
 .sbh-btn:hover{background:var(--lime2);transform:translateY(-1px);}
 .sbh-btn svg{flex-shrink:0;}
 
+/* ── Inline social proof ── */
+.hero-proof{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.hp-avatars{display:flex;}
+.hp-avatars img{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,.3);margin-left:-8px;object-fit:cover;}
+.hp-avatars img:first-child{margin-left:0;}
+.hp-stars{color:#f59e0b;font-size:13px;letter-spacing:1px;}
+.hp-text{font-size:13px;color:rgba(255,255,255,.75);font-weight:500;}
+
 /* ── Trust badges poshtë search box ── */
 .hero-badges{display:flex;align-items:center;justify-content:center;gap:28px;flex-wrap:wrap;}
 .hero-badge{font-size:13px;font-weight:500;color:rgba(255,255,255,.45);display:flex;align-items:center;gap:6px;}
@@ -133,7 +141,7 @@ input,select{font-family:var(--f-b);}
 
 /* ── Stats strip ── */
 .hero-strip{position:relative;z-index:2;background:rgba(255,255,255,.04);border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:stretch;}
-.hs-item{flex:1;padding:22px 32px;border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;justify-content:center;}
+.hs-item{flex:1;padding:22px 32px;border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
 .hs-item:last-child{border-right:none;}
 .hs-num{font-family:var(--f-d);font-size:28px;font-weight:800;color:var(--white);letter-spacing:-1px;line-height:1;margin-bottom:4px;}
 .hs-num .u{color:var(--lime);font-size:18px;}
@@ -146,21 +154,6 @@ input,select{font-family:var(--f-b);}
 .marquee-item::after{content:'★';font-size:10px;opacity:.4;}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-/* ══ SOCIAL PROOF STRIP ══ */
-.proof-strip{background:var(--white);border-bottom:1px solid var(--border);padding:20px 0;}
-.proof-inner{max-width:1200px;margin:0 auto;padding:0 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
-.proof-reviews{display:flex;align-items:center;gap:12px;}
-.proof-avatars{display:flex;}
-.proof-av{width:32px;height:32px;border-radius:50%;border:2px solid white;background:var(--border2);overflow:hidden;margin-left:-8px;font-size:14px;display:flex;align-items:center;justify-content:center;}
-.proof-av:first-child{margin-left:0;}
-.proof-av img{width:100%;height:100%;object-fit:cover;}
-.proof-text{}
-.proof-stars{color:#f59e0b;font-size:14px;letter-spacing:1px;}
-.proof-count{font-size:13px;color:var(--gray2);margin-top:1px;}
-.proof-count strong{color:var(--ink);font-weight:700;}
-.proof-badges{display:flex;gap:12px;flex-wrap:wrap;}
-.proof-badge{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--gray2);padding:6px 14px;border:1px solid var(--border);border-radius:100px;background:var(--paper);}
-.proof-badge .ic{font-size:14px;}
 
 /* ══ SECTIONS ══ */
 .wrap{max-width:1200px;margin:0 auto;padding:0 40px;}
@@ -391,7 +384,6 @@ footer{background:var(--ink);color:white;padding:64px 0 36px;}
   .hs-item{flex:0 0 50%;border-bottom:1px solid rgba(255,255,255,.06);}
   .hs-item:nth-child(even){border-right:none;}
   .wrap{padding:0 16px;}
-  .proof-inner{flex-direction:column;align-items:flex-start;}
   .fleet-section,.biz-section,.how-section,.testi-section{padding-top:48px;padding-bottom:48px;}
   .fleet-header{flex-direction:column;align-items:flex-start;gap:12px;}
   .fleet-grid{grid-template-columns:1fr;}
@@ -462,6 +454,24 @@ footer{background:var(--ink);color:white;padding:64px 0 36px;}
           <option value="Pejë">Pejë</option>
           <option value="Mitrovicë">Mitrovicë</option>
           <option value="Gjakovë">Gjakovë</option>
+          <option value="Ferizaj">Ferizaj</option>
+          <option value="Gjilan">Gjilan</option>
+          <option value="Vushtrri">Vushtrri</option>
+          <option value="Podujevë">Podujevë</option>
+          <option value="Suharekë">Suharekë</option>
+          <option value="Rahovec">Rahovec</option>
+          <option value="Malishevë">Malishevë</option>
+          <option value="Dragash">Dragash</option>
+          <option value="Skënderaj">Skënderaj</option>
+          <option value="Klinë">Klinë</option>
+          <option value="Istog">Istog</option>
+          <option value="Deçan">Deçan</option>
+          <option value="Junik">Junik</option>
+          <option value="Kaçanik">Kaçanik</option>
+          <option value="Shtimje">Shtimje</option>
+          <option value="Fushë Kosovë">Fushë Kosovë</option>
+          <option value="Lipjan">Lipjan</option>
+          <option value="Graçanicë">Graçanicë</option>
         </select>
       </div>
       <div class="sbh-div"></div>
@@ -480,6 +490,15 @@ footer{background:var(--ink);color:white;padding:64px 0 36px;}
       </button>
     </div>
 
+    <!-- Inline social proof -->
+    <div class="hero-proof">
+      <div class="hp-avatars">
+        <img src="https://i.pravatar.cc/32?img=1" alt=""/><img src="https://i.pravatar.cc/32?img=2" alt=""/><img src="https://i.pravatar.cc/32?img=3" alt=""/><img src="https://i.pravatar.cc/32?img=4" alt=""/><img src="https://i.pravatar.cc/32?img=5" alt=""/>
+      </div>
+      <span class="hp-stars">★★★★★</span>
+      <span class="hp-text">4.9/5 · 500+ klientë të kënaqur</span>
+    </div>
+
     <!-- Trust badges -->
     <div class="hero-badges">
       <div class="hero-badge"><span class="check">✓</span> Agjenci të verifikuara</div>
@@ -493,44 +512,40 @@ footer{background:var(--ink);color:white;padding:64px 0 36px;}
     <div class="hs-item"><div class="hs-num">500<span class="u">+</span></div><div class="hs-label">Rezervime të suksesshme</div></div>
     <div class="hs-item"><div class="hs-num">7</div><div class="hs-label">Qytete të mbuluar</div></div>
     <div class="hs-item"><div class="hs-num">4.9<span class="u">★</span></div><div class="hs-label">Vlerësim mesatar</div></div>
-    <div class="hs-item"><div class="hs-num">10<span class="u">%</span></div><div class="hs-label">Komision — më i ulët në rajon</div></div>
+    <div class="hs-item"><div class="hs-num">50<span class="u">+</span></div><div class="hs-label">Vetura Aktive</div></div>
   </div>
 </section>
 
 <!-- MARQUEE -->
 <div class="marquee-strip">
   <div class="marquee-track">
-    <span class="marquee-item">Rent a Car Kosovë</span><span class="marquee-item">Agjenci të Verifikuara</span>
-    <span class="marquee-item">Rezervo Online</span><span class="marquee-item">Prishtinë</span>
+    <span class="marquee-item">Rent a Car Kosovë</span><span class="marquee-item">Prishtinë</span>
     <span class="marquee-item">Prizren</span><span class="marquee-item">Pejë</span>
-    <span class="marquee-item">Cash ose Kartë</span>
-    <span class="marquee-item">Rentoks KS</span>
-    <span class="marquee-item">Rent a Car Kosovë</span><span class="marquee-item">Agjenci të Verifikuara</span>
-    <span class="marquee-item">Rezervo Online</span><span class="marquee-item">Prishtinë</span>
+    <span class="marquee-item">Mitrovicë</span><span class="marquee-item">Gjakovë</span>
+    <span class="marquee-item">Ferizaj</span><span class="marquee-item">Agjenci të Verifikuara</span>
+    <span class="marquee-item">Gjilan</span><span class="marquee-item">Vushtrri</span>
+    <span class="marquee-item">Podujevë</span><span class="marquee-item">Suharekë</span>
+    <span class="marquee-item">Rahovec</span><span class="marquee-item">Rent a Car Kosovë</span>
+    <span class="marquee-item">Malishevë</span><span class="marquee-item">Dragash</span>
+    <span class="marquee-item">Skënderaj</span><span class="marquee-item">Klinë</span>
+    <span class="marquee-item">Istog</span><span class="marquee-item">Agjenci të Verifikuara</span>
+    <span class="marquee-item">Deçan</span><span class="marquee-item">Junik</span>
+    <span class="marquee-item">Kaçanik</span><span class="marquee-item">Shtimje</span>
+    <span class="marquee-item">Rent a Car Kosovë</span><span class="marquee-item">Prishtinë</span>
     <span class="marquee-item">Prizren</span><span class="marquee-item">Pejë</span>
-    <span class="marquee-item">Cash ose Kartë</span>
-    <span class="marquee-item">Rentoks KS</span>
+    <span class="marquee-item">Mitrovicë</span><span class="marquee-item">Gjakovë</span>
+    <span class="marquee-item">Ferizaj</span><span class="marquee-item">Agjenci të Verifikuara</span>
+    <span class="marquee-item">Gjilan</span><span class="marquee-item">Vushtrri</span>
+    <span class="marquee-item">Podujevë</span><span class="marquee-item">Suharekë</span>
+    <span class="marquee-item">Rahovec</span><span class="marquee-item">Rent a Car Kosovë</span>
+    <span class="marquee-item">Malishevë</span><span class="marquee-item">Dragash</span>
+    <span class="marquee-item">Skënderaj</span><span class="marquee-item">Klinë</span>
+    <span class="marquee-item">Istog</span><span class="marquee-item">Agjenci të Verifikuara</span>
+    <span class="marquee-item">Deçan</span><span class="marquee-item">Junik</span>
+    <span class="marquee-item">Kaçanik</span><span class="marquee-item">Shtimje</span>
   </div>
 </div>
 
-<!-- SOCIAL PROOF -->
-<div class="proof-strip">
-  <div class="proof-inner">
-    <div class="proof-reviews">
-      <div class="proof-avatars">
-        <div class="proof-av"><img src="https://i.pravatar.cc/40?img=1" alt=""/></div>
-        <div class="proof-av"><img src="https://i.pravatar.cc/40?img=2" alt=""/></div>
-        <div class="proof-av"><img src="https://i.pravatar.cc/40?img=3" alt=""/></div>
-        <div class="proof-av"><img src="https://i.pravatar.cc/40?img=4" alt=""/></div>
-        <div class="proof-av"><img src="https://i.pravatar.cc/40?img=5" alt=""/></div>
-      </div>
-      <div class="proof-text">
-        <div class="proof-stars">★★★★★</div>
-        <div class="proof-count"><strong>500+</strong> klientë të kënaqur · Vlerësim <strong>4.9/5</strong></div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- FLEET -->
 <section class="fleet-section" id="fleet">
@@ -541,10 +556,12 @@ footer{background:var(--ink);color:white;padding:64px 0 36px;}
     </div>
     <div class="filter-bar rv" id="filter-bar">
       <button class="fpill on" onclick="filterByCat('')" data-cat="">Të gjitha</button>
-      <button class="fpill" onclick="filterByCat('Automatik')" data-cat="Automatik">Automatik</button>
-      <button class="fpill" onclick="filterByPrice(40)" data-price="40">Nën €40</button>
+      <button class="fpill" onclick="filterByCat('Ekonomike')" data-cat="Ekonomike">Ekonomike</button>
       <button class="fpill" onclick="filterByCat('SUV')" data-cat="SUV">SUV</button>
       <button class="fpill" onclick="filterByCat('Premium')" data-cat="Premium">Premium</button>
+      <button class="fpill" onclick="filterByCat('Van')" data-cat="Van">Van</button>
+      <button class="fpill" onclick="filterByCat('Automatik')" data-cat="Automatik">Automatik</button>
+      <button class="fpill" onclick="filterByCat('Me Shofer')" data-cat="Me Shofer">Me Shofer</button>
     </div>
 
     <div class="fleet-grid" id="fleet-grid">
