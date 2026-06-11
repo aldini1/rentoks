@@ -530,11 +530,11 @@ const CARD_IMGS = [
 
 // ── LOAD VEHICLE ──
 async function loadVehicle() {
-  const vehicleId = parseInt(new URLSearchParams(window.location.search).get('id'), 10);
+  const vehicleId = (new URLSearchParams(window.location.search).get('id') || '').split(':')[0].trim();
   if (!vehicleId) { window.location.href = '/'; return; }
 
   try {
-    const res = await fetch(`/api/vehicles/${vehicleId}`);
+    const res = await fetch('/api/vehicles/' + vehicleId);
     console.log('[vehicle] status:', res.status, 'id:', vehicleId);
     if (!res.ok) { showNotFound(); return; }
     const v = await res.json();
