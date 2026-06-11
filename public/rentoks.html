@@ -1132,14 +1132,15 @@ async function loadFleetVehicles() {
   showFleetSkeleton();
   try {
     const res = await fetch('/api/vehicles?limit=12');
-    if (!res.ok) throw new Error('API error');
     const data = await res.json();
+    console.log('[fleet] status:', res.status, '| count:', Array.isArray(data) ? data.length : data);
+    if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
     allVehicles = Array.isArray(data) ? data : [];
     renderFleet(allVehicles);
   } catch(err) {
+    console.error('[fleet] load error:', err);
     allVehicles = [];
     renderFleet([]);
-    console.error('Fleet load error:', err);
   }
 }
 

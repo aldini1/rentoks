@@ -7,7 +7,7 @@ router.get('/', async (req, res) => {
   try {
     const { category, city, max_price, exclude_id, limit = 20, offset = 0 } = req.query;
 
-    const conditions = ["v.status = 'active'", "b.status = 'approved'"];
+    const conditions = ["v.status = 'active'", "b.status != 'rejected'"];
     const params = [];
     let i = 1;
 
