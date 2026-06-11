@@ -182,6 +182,7 @@ router.put('/bookings/:id', authMiddleware, bizOnly, async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
+    console.log('Booking update:', id, req.body);
 
     const allowed = ['confirmed', 'cancelled', 'completed'];
     if (!allowed.includes(status)) {
