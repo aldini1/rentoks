@@ -2,6 +2,41 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 
+// GET /api/vehicles/debug — count rows and check join (must be before /:id)
+router.get('/debug', async (req, res) => {
+  try {
+    const [vCount, bCount, bStatuses, vStatuses, joinResult] = await Promise.all([
+      pool.query('SELECT COUNT(*) FROM vehicles'),
+      pool.query('SELECT COUNT(*) FROM businesses'),
+      pool.query("SELECT status, COUNT(*) FROM businesses GROUP BY status"),
+      pool.query("SELECT status, COUNT(*) FROM vehicles GROUP BY status"),
+      pool.query(`SELECT v.id, v.brand, v.model, v.status AS v_status,
+                         b.id AS b_id, b.business_name, b.status AS b_status
+                  FROM vehicles v
+                  LEFT JOIN businesses b ON v.business_id = b.id
+                  LIMIT 5`),
+    ]);
+
+    const payload = {
+      vehicles_total:    parseInt(vCount.rows[0].count),
+      businesses_total:  parseInt(bCount.rows[0].count),
+      business_statuses: bStatuses.rows,
+      vehicle_statuses:  vStatuses.rows,
+      sample_join:       joinResult.rows,
+    };
+
+    console.log('[debug] vehicles:', payload.vehicles_total,
+                '| businesses:', payload.businesses_total,
+                '| b.statuses:', JSON.stringify(payload.business_statuses),
+                '| v.statuses:', JSON.stringify(payload.vehicle_statuses));
+
+    res.json(payload);
+  } catch (err) {
+    console.error('[debug] error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET /api/vehicles — lista aktive me filtrim
 router.get('/', async (req, res) => {
   try {
@@ -18,15 +53,18 @@ router.get('/', async (req, res) => {
 
     params.push(parseInt(limit), parseInt(offset));
 
-    const result = await pool.query(
-      `SELECT v.*, b.business_name, b.city AS biz_city, b.logo_url
+    const sql = `SELECT v.*, b.business_name, b.city AS biz_city, b.logo_url
        FROM vehicles v
        JOIN businesses b ON v.business_id = b.id
        WHERE ${conditions.join(' AND ')}
        ORDER BY v.created_at DESC
-       LIMIT $${i++} OFFSET $${i}`,
-      params
-    );
+       LIMIT $${i++} OFFSET $${i}`;
+
+    console.log('[GET /api/vehicles] conditions:', conditions, '| params:', params);
+
+    const result = await pool.query(sql, params);
+
+    console.log('[GET /api/vehicles] rows returned:', result.rows.length);
 
     res.json(result.rows);
   } catch (err) {
