@@ -292,9 +292,10 @@ input,select{font-family:var(--f-b);}
 .hp-text{font-size:13px;color:rgba(255,255,255,.75);font-weight:500;}
 
 /* ── Trust badges poshtë search box ── */
-.hero-badges{display:flex;align-items:center;justify-content:center;gap:28px;flex-wrap:wrap;}
-.hero-badge{font-size:13px;font-weight:500;color:rgba(255,255,255,.45);display:flex;align-items:center;gap:6px;}
-.hero-badge .check{color:var(--lime);font-weight:700;}
+.hero-badges{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;}
+.hero-badge{font-size:13px;font-weight:600;color:rgba(255,255,255,.85);display:flex;align-items:center;gap:7px;padding:0 24px;}
+.hero-badge+.hero-badge{border-left:1px solid rgba(255,255,255,.2);}
+.hero-badge .check{color:var(--lime);font-weight:800;}
 
 /* ── Stats strip ── */
 .hero-strip{position:relative;z-index:4;background:rgba(255,255,255,.03);border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:stretch;}
@@ -396,7 +397,7 @@ input,select{font-family:var(--f-b);}
 .testi-stars{color:#f59e0b;font-size:16px;letter-spacing:2px;margin-bottom:14px;}
 .testi-text{font-size:15px;color:rgba(255,255,255,.45);line-height:1.75;margin-bottom:20px;font-style:italic;}
 .testi-author{display:flex;align-items:center;gap:10px;}
-.testi-av{width:40px;height:40px;border-radius:50%;background:#1a1a1a;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;border:1px solid rgba(255,255,255,.08);}
+.testi-av{width:44px;height:44px;border-radius:50%;background:#1a1a1a;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;border:1px solid rgba(255,255,255,.08);}
 .testi-name{font-size:14px;font-weight:700;color:#fff;margin-bottom:2px;}
 .testi-meta{font-size:12px;color:rgba(255,255,255,.3);}
 
@@ -470,7 +471,7 @@ input,select{font-family:var(--f-b);}
 
 /* ══ FOOTER ══ */
 footer{background:#050505;color:white;padding:64px 0 36px;border-top:1px solid rgba(200,255,0,.1);box-shadow:inset 0 1px 0 rgba(200,255,0,.03);}
-.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,.05);}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,.05);}
 .f-logo{font-family:var(--f-d);font-size:20px;font-weight:800;margin-bottom:12px;color:white;}
 .f-logo span{color:var(--lime);text-shadow:0 0 16px rgba(200,255,0,.4);}
 .f-desc{font-size:13px;color:rgba(255,255,255,.28);line-height:1.7;max-width:200px;margin-bottom:20px;}
@@ -603,7 +604,7 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
   .cta-btns{flex-direction:column;width:100%;}
   .btn-cta-p,.btn-cta-g{text-align:center;width:100%;}
   .footer-grid{grid-template-columns:1fr 1fr;gap:28px;}
-  .footer-grid>div:first-child{grid-column:span 2;}
+  .footer-grid>div:first-child{grid-column:span 2;grid-column:1/-1;}
   .footer-bot{flex-direction:column;text-align:center;}
   .ov{align-items:flex-end;padding:0;}
   .modal{border-radius:20px 20px 0 0;max-width:100%;padding:24px 16px max(24px,env(safe-area-inset-bottom));}
@@ -649,7 +650,7 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
   </div>
   <div class="hero-content">
     <div class="hero-eyebrow h-rv d1"><span class="dot"></span> 🇽🇰 Platforma #1 në Kosovë</div>
-    <h1 class="hero-h1 h-rv d2">Merr veturën tënde<br>në <span class="grad">Kosovë</span></h1>
+    <h1 class="hero-h1 h-rv d2">Merr veturën tënde<br>në <em style="font-style:italic;font-weight:800;color:white;">Kosovë</em></h1>
     <p class="hero-desc h-rv d3">Krahaso oferta nga agjenci të verifikuara. Rezervo në 60 sekonda.</p>
 
     <!-- Airbnb-style search bar -->
@@ -715,7 +716,7 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
     <div class="hs-item"><div class="hs-num">500<span class="u">+</span></div><div class="hs-label">Rezervime të suksesshme</div></div>
     <div class="hs-item"><div class="hs-num">7</div><div class="hs-label">Qytete të mbuluar</div></div>
     <div class="hs-item"><div class="hs-num">4.9<span class="u">★</span></div><div class="hs-label">Vlerësim mesatar</div></div>
-    <div class="hs-item"><div class="hs-num">50<span class="u">+</span></div><div class="hs-label">Vetura Aktive</div></div>
+    <div class="hs-item"><div class="hs-num">100<span class="u">+</span></div><div class="hs-label">Vetura Aktive</div></div>
   </div>
 </section>
 
@@ -772,7 +773,6 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
         <div class="vc-top">
           <img class="vc-photo" src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=600&q=80" alt="VW Golf 7"/>
           <button class="vc-save" onclick="toggleSave(this)">♡</button>
-          <div class="vc-pay">Cash ose Kartë</div>
           <div class="vc-biz-chip"><div class="biz-dot">✓</div><span class="biz-name">AutoPrishtina Rent</span></div>
         </div>
         <div class="vc-body">
@@ -791,7 +791,6 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
         <div class="vc-top">
           <img class="vc-photo" src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&q=80" alt="BMW 5 Series"/>
           <button class="vc-save" onclick="toggleSave(this)">♡</button>
-          <div class="vc-pay">Cash only</div>
           <div class="vc-biz-chip"><div class="biz-dot">✓</div><span class="biz-name">PrizrenCar Rental</span></div>
         </div>
         <div class="vc-body">
@@ -810,7 +809,6 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
         <div class="vc-top">
           <img class="vc-photo" src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=600&q=80" alt="Toyota RAV4"/>
           <button class="vc-save" onclick="toggleSave(this)">♡</button>
-          <div class="vc-pay">Cash ose Kartë</div>
           <div class="vc-biz-chip"><div class="biz-dot">✓</div><span class="biz-name">KosRent Pejë</span></div>
         </div>
         <div class="vc-body">
@@ -829,7 +827,6 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
         <div class="vc-top">
           <img class="vc-photo" src="https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=600&q=80" alt="Skoda Octavia"/>
           <button class="vc-save" onclick="toggleSave(this)">♡</button>
-          <div class="vc-pay">Cash ose Kartë</div>
           <div class="vc-biz-chip"><div class="biz-dot">✓</div><span class="biz-name">DriveKS Prishtinë</span></div>
         </div>
         <div class="vc-body">
@@ -848,7 +845,6 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
         <div class="vc-top">
           <img class="vc-photo" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Mercedes Vito"/>
           <button class="vc-save" onclick="toggleSave(this)">♡</button>
-          <div class="vc-pay">Cash only</div>
           <div class="vc-biz-chip"><div class="biz-dot">✓</div><span class="biz-name">AutoPrishtina Rent</span></div>
         </div>
         <div class="vc-body">
@@ -867,7 +863,6 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
         <div class="vc-top">
           <img class="vc-photo" src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=600&q=80" alt="Mercedes E-Class"/>
           <button class="vc-save" onclick="toggleSave(this)">♡</button>
-          <div class="vc-pay">Cash ose Kartë</div>
           <div class="vc-biz-chip"><div class="biz-dot">✓</div><span class="biz-name">LuxDrive Kosovo</span></div>
         </div>
         <div class="vc-body">
@@ -954,7 +949,7 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
       </div>
       <div class="biz-content rv d2">
         <div class="eyebrow">Për Agjencitë</div>
-        <div class="biz-title">Listo flotën.<br>Rrit rezervimet.<br><em style="color:var(--gray)">Shumë thjeshtë.</em></div>
+        <div class="biz-title">Shto veturën tënde.<br>Fillo të fitosh.<br><em style="color:var(--gray)">Shumë thjeshtë.</em></div>
         <p class="biz-desc">Rentoks është platforma e parë në Kosovë që lidh agjencitë e verifikuara me mijëra klientë çdo muaj. Falas të fillosh.</p>
         <ul class="biz-list">
           <li><div class="chk">✓</div><span>Regjistrim falas — pa kosto fillestare, pa kontratë</span></li>
@@ -975,7 +970,7 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
 <!-- WHY -->
 <section class="why-section">
   <div class="wrap">
-    <div class="rv"><div class="eyebrow">Pse Rentoks</div><div class="big-title">Ndërtuar për<br>besim total.</div></div>
+    <div class="rv"><div class="eyebrow">Pse Rentoks</div><div class="big-title">Pse zgjedhin<br>Rentoks?</div></div>
     <div class="why-grid">
       <div class="why-card rv d1"><div class="why-ic">🏢</div><div class="why-t">Vetëm Biznese Ligjore</div><p class="why-d">Çdo agjenci kalon verifikim dhe licencë operative. Pa individë, pa rrezik.</p></div>
       <div class="why-card rv d2"><div class="why-ic">💳</div><div class="why-t">Pagesa Fleksibile</div><p class="why-d">Kartë online ose cash në marrje — ti zgjedh.</p></div>
@@ -1013,7 +1008,6 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
       </div>
       <div class="f-col"><h4>Platforma</h4><ul><li><a href="#">Gjej Veturë</a></li><li><a href="#">Si Funksionon</a></li><li><a href="#">Lokacionet</a></li><li><a href="#">Blog</a></li></ul></div>
       <div class="f-col"><h4>Agjencitë</h4><ul><li><a href="#">Regjistrohu</a></li><li><a href="#">Dashboard</a></li><li><a href="#">Komisionet</a></li><li><a href="#">Kushtet</a></li></ul></div>
-      <div class="f-col"><h4>Kompania</h4><ul><li><a href="#">Rreth Nesh</a></li><li><a href="#">Kontakt</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li></ul></div>
     </div>
     <div class="footer-bot">
       <p>© 2026 Rentoks. Të gjitha të drejtat e rezervuara. 🇽🇰 Prishtinë, Kosovë</p>
