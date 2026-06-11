@@ -66,6 +66,8 @@ router.get('/', async (req, res) => {
 
 // GET /api/vehicles/:id — detajet e plotë + info agjencia
 router.get('/:id', async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) return res.status(400).json({ error: 'ID e pavlefshme.' });
   try {
     const result = await pool.query(
       `SELECT v.*,
@@ -73,7 +75,7 @@ router.get('/:id', async (req, res) => {
        FROM vehicles v
        JOIN businesses b ON v.business_id = b.id
        WHERE v.id = $1`,
-      [req.params.id]
+      [id]
     );
 
     if (!result.rows.length) {

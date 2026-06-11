@@ -527,7 +527,7 @@ const CARD_IMGS = [
 
 // ── LOAD VEHICLE ──
 async function loadVehicle() {
-  const vehicleId = new URLSearchParams(window.location.search).get('id');
+  const vehicleId = parseInt(new URLSearchParams(window.location.search).get('id'), 10);
   if (!vehicleId) { window.location.href = '/'; return; }
 
   try {
