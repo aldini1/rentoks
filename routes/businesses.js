@@ -109,8 +109,7 @@ router.put('/vehicles/:id', authMiddleware, bizOnly, async (req, res) => {
       `UPDATE vehicles SET
          brand=$1, model=$2, year=$3, fuel=$4, transmission=$5, seats=$6,
          price_per_day=$7, location=$8, features=$9, description=$10,
-         status=COALESCE($11, status),
-         updated_at=NOW()
+         status=COALESCE($11, status)
        WHERE id=$12 AND business_id=$13
        RETURNING *`,
       [brand, model, year, fuel, transmission, seats,
