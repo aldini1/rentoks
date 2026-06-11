@@ -207,7 +207,9 @@ async function loadVehicles() {
     tbody.innerHTML = vehicles.map(v => `
       <tr>
         <td><div class="car-info">
-          <div class="car-thumb" style="background:var(--paper2);display:flex;align-items:center;justify-content:center;font-size:20px;">🚗</div>
+          ${Array.isArray(v.photo_urls) && v.photo_urls.length
+            ? `<div class="car-thumb"><img src="${v.photo_urls[0]}" style="width:64px;height:44px;object-fit:cover;border-radius:8px;display:block;"></div>`
+            : `<div class="car-thumb" style="background:var(--paper2);display:flex;align-items:center;justify-content:center;font-size:20px;">🚗</div>`}
           <div><div class="car-tname">${v.brand} ${v.model} ${v.year}</div>
           <div class="car-tyear">${v.transmission || '—'} · ${v.fuel || '—'} · ${v.seats || '—'} vende</div></div>
         </div></td>
@@ -232,39 +234,56 @@ async function loadVehicles() {
 
 // ── Add Vehicle ──
 async function addVehicle() {
-  const body = {
-    brand: document.getElementById('v-brand')?.value,
-    model: document.getElementById('v-model')?.value?.trim(),
-    year: parseInt(document.getElementById('v-year')?.value),
-    fuel: document.getElementById('v-fuel')?.value,
-    transmission: document.getElementById('v-transmission')?.value,
-    price_per_day: parseFloat(document.getElementById('v-price')?.value),
-    seats: parseInt(document.getElementById('v-seats')?.value),
-    location: document.getElementById('v-location')?.value?.trim(),
-    license_plate: document.getElementById('v-plate')?.value?.trim(),
-    features: document.getElementById('v-features')?.value?.trim(),
-    description: document.getElementById('v-description')?.value?.trim(),
-    city: getUser()?.city || 'Prishtinë',
-    category: 'sedan'
-  };
-
-  if (!body.brand || !body.model || !body.year || !body.price_per_day) {
-    dashToast('Plotëso: Marka, Modeli, Viti dhe Çmimi!', 'error');
-    return;
-  }
-
   const btn = document.getElementById('save-car-btn');
-  if (btn) { btn.textContent = 'Duke ruajtur...'; btn.disabled = true; }
+  if (btn) { btn.disabled = true; }
 
   try {
+    // Upload photos first (selectedFiles is declared in the inline script)
+    const photoUrls = [];
+    const files = typeof selectedFiles !== 'undefined' ? selectedFiles : [];
+    for (let i = 0; i < files.length; i++) {
+      if (btn) btn.textContent = `Duke ngarkuar foton ${i + 1}/${files.length}...`;
+      const fd = new FormData();
+      fd.append('photo', files[i]);
+      const r = await fetch('/api/upload/vehicle-photo', { method: 'POST', body: fd });
+      if (!r.ok) { const e = await r.json(); throw new Error(e.error || 'Ngarkimi dështoi'); }
+      photoUrls.push((await r.json()).url);
+    }
+
+    if (btn) btn.textContent = 'Duke ruajtur...';
+
+    const body = {
+      brand:         document.getElementById('v-brand')?.value,
+      model:         document.getElementById('v-model')?.value?.trim(),
+      year:          parseInt(document.getElementById('v-year')?.value),
+      fuel:          document.getElementById('v-fuel')?.value,
+      transmission:  document.getElementById('v-transmission')?.value,
+      price_per_day: parseFloat(document.getElementById('v-price')?.value),
+      seats:         parseInt(document.getElementById('v-seats')?.value),
+      location:      document.getElementById('v-location')?.value?.trim(),
+      license_plate: document.getElementById('v-plate')?.value?.trim(),
+      features:      document.getElementById('v-features')?.value?.trim(),
+      description:   document.getElementById('v-description')?.value?.trim(),
+      city:          getUser()?.city || 'Prishtinë',
+      category:      'sedan',
+      photo_urls:    photoUrls,
+    };
+
+    if (!body.brand || !body.model || !body.year || !body.price_per_day) {
+      dashToast('Plotëso: Marka, Modeli, Viti dhe Çmimi!', 'error');
+      return;
+    }
+
     await apiCall('/businesses/vehicles', 'POST', body);
     dashToast('Vetura u shtua me sukses! ✓', 'success');
     document.getElementById('add-car-form').classList.remove('open');
-    // Reset form
+
     ['v-model','v-year','v-price','v-location','v-plate','v-features','v-description'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.value = '';
+      const el = document.getElementById(id); if (el) el.value = '';
     });
+    if (typeof selectedFiles !== 'undefined') { selectedFiles.length = 0; }
+    if (typeof renderPhotoPreviews === 'function') renderPhotoPreviews();
+
     loadVehicles();
     loadStats();
   } catch(err) {

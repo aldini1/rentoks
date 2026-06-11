@@ -60,7 +60,8 @@ router.get('/vehicles', authMiddleware, bizOnly, async (req, res) => {
 router.post('/vehicles', authMiddleware, bizOnly, async (req, res) => {
   try {
     const { brand, model, year, fuel, transmission, seats, category,
-            price_per_day, location, city, license_plate, features, description } = req.body;
+            price_per_day, location, city, license_plate, features, description,
+            photo_urls } = req.body;
 
     if (!brand || !model || !price_per_day) {
       return res.status(400).json({ error: 'Marka, modeli dhe çmimi janë të detyrueshme.' });
@@ -69,11 +70,12 @@ router.post('/vehicles', authMiddleware, bizOnly, async (req, res) => {
     const result = await pool.query(
       `INSERT INTO vehicles
          (business_id, brand, model, year, fuel, transmission, seats, category,
-          price_per_day, location, city, license_plate, features, description)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
+          price_per_day, location, city, license_plate, features, description, photo_urls)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
        RETURNING *`,
       [req.user.id, brand, model, year, fuel, transmission, seats || 5, category,
-       price_per_day, location, city, license_plate, features, description]
+       price_per_day, location, city, license_plate, features, description,
+       JSON.stringify(photo_urls || [])]
     );
 
     // Përditëso fleet_size

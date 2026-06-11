@@ -1169,51 +1169,7 @@ function renderPhotoPreviews() {
   });
 }
 
-async function addVehicle() {
-  const btn = document.getElementById('save-car-btn');
-  btn.disabled = true;
-  try {
-    const photoUrls = [];
-    for (let i = 0; i < selectedFiles.length; i++) {
-      btn.textContent = `Duke ngarkuar foton ${i + 1}/${selectedFiles.length}...`;
-      const fd = new FormData();
-      fd.append('photo', selectedFiles[i]);
-      const r = await fetch('/api/upload/vehicle-photo', { method: 'POST', body: fd });
-      if (!r.ok) { const e = await r.json(); throw new Error(e.error || 'Ngarkimi dështoi'); }
-      photoUrls.push((await r.json()).url);
-    }
-    btn.textContent = 'Duke ruajtur...';
-    const payload = {
-      brand:         document.getElementById('v-brand').value,
-      model:         document.getElementById('v-model').value,
-      year:          parseInt(document.getElementById('v-year').value) || null,
-      fuel:          document.getElementById('v-fuel').value,
-      transmission:  document.getElementById('v-transmission').value,
-      price_per_day: parseFloat(document.getElementById('v-price').value) || null,
-      seats:         parseInt(document.getElementById('v-seats').value),
-      location:      document.getElementById('v-location').value,
-      license_plate: document.getElementById('v-plate').value,
-      features:      document.getElementById('v-features').value,
-      description:   document.getElementById('v-description').value,
-      photo_urls:    photoUrls,
-    };
-    const res = await fetch('/api/vehicles', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) { const e = await res.json(); throw new Error(e.error || 'Gabim serveri'); }
-    showToast('Vetura u shtua me sukses! ✓');
-    hideAddCar();
-    selectedFiles.length = 0;
-    renderPhotoPreviews();
-  } catch (err) {
-    showToast(`Gabim: ${err.message}`);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Ruaj Veturën';
-  }
-}
+// addVehicle() is defined in dashboard-api.js
 </script>
 <script src="/dashboard-api.js"></script>
 </body>
