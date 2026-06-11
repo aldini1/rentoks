@@ -261,7 +261,6 @@ async function addVehicle() {
       price_per_day: parseFloat(document.getElementById('v-price')?.value),
       seats:         parseInt(document.getElementById('v-seats')?.value),
       location:      document.getElementById('v-location')?.value?.trim(),
-      license_plate: document.getElementById('v-plate')?.value?.trim(),
       features:      document.getElementById('v-features')?.value?.trim(),
       description:   document.getElementById('v-description')?.value?.trim(),
       city:          getUser()?.city || 'Prishtinë',
@@ -278,7 +277,7 @@ async function addVehicle() {
     dashToast('Vetura u shtua me sukses! ✓', 'success');
     document.getElementById('add-car-form').classList.remove('open');
 
-    ['v-model','v-year','v-price','v-location','v-plate','v-features','v-description'].forEach(id => {
+    ['v-model','v-year','v-price','v-location','v-features','v-description'].forEach(id => {
       const el = document.getElementById(id); if (el) el.value = '';
     });
     if (typeof selectedFiles !== 'undefined') { selectedFiles.length = 0; }
