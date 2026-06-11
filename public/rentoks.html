@@ -64,9 +64,7 @@ input,select{font-family:var(--f-b);}
 .nav.hero-zone .n-ghost{border-color:rgba(255,255,255,0.18);color:rgba(255,255,255,.8);}
 .nav.hero-zone .n-ghost:hover{border-color:rgba(200,255,0,.5);color:white;}
 .nav.hero-zone .n-cta{background:var(--lime);color:var(--ink);}
-.logo{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:800;letter-spacing:-1px;color:white;display:flex;align-items:center;gap:8px;text-decoration:none;}
-.logo-badge{width:32px;height:32px;background:#c8ff00;color:#080808;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;flex-shrink:0;}
-.nav .logo{margin-right:auto;}
+.logo-img-wrap{margin-right:auto;display:block;}
 .nav-links{display:flex;list-style:none;gap:2px;}
 .nav-links a{font-size:13px;font-weight:500;color:rgba(255,255,255,.5);padding:6px 12px;border-radius:6px;transition:all .15s;}
 .nav-links a:hover{color:white;background:rgba(255,255,255,.06);}
@@ -469,8 +467,6 @@ input,select{font-family:var(--f-b);}
 /* ══ FOOTER ══ */
 footer{background:#050505;color:white;padding:64px 0 36px;border-top:1px solid rgba(200,255,0,.1);box-shadow:inset 0 1px 0 rgba(200,255,0,.03);}
 .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,.05);}
-.f-logo{font-family:var(--f-d);font-size:20px;font-weight:800;margin-bottom:12px;color:white;}
-.f-logo span{color:var(--lime);text-shadow:0 0 16px rgba(200,255,0,.4);}
 .f-desc{font-size:13px;color:rgba(255,255,255,.28);line-height:1.7;max-width:200px;margin-bottom:20px;}
 .f-social{display:flex;gap:8px;}
 .fsoc{width:36px;height:36px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;display:flex;align-items:center;justify-content:center;transition:all .2s;color:rgba(255,255,255,.4);}
@@ -617,11 +613,10 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
 
 <!-- NAV -->
 <nav class="nav hero-zone" id="nav">
-  <a class="logo" href="/"><span class="logo-badge">R</span>entoks</a>
+  <a href="/" class="logo-img-wrap"><img src="/rentoks_logo.png" alt="Rentoks" height="32" style="display:block;"></a>
   <ul class="nav-links">
     <li><a href="#fleet">Vetura</a></li>
     <li><a href="#si-funksionon">Si funksionon</a></li>
-    <li><a href="#bizneset">Bizneset</a></li>
   </ul>
   <div class="nav-r">
     <button class="n-ghost" onclick="openM('login')">Hyr</button>
@@ -995,7 +990,7 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
   <div class="wrap">
     <div class="footer-grid">
       <div>
-        <div class="logo" style="margin-bottom:12px;"><span class="logo-badge">R</span>entoks</div>
+        <a href="/" class="logo-img-wrap"><img src="/rentoks_logo.png" alt="Rentoks" height="32" style="display:block;margin-bottom:12px;"></a>
         <p class="f-desc">Marketplace i parë i car rental në Kosovë. Vetëm agjenci të verifikuara.</p>
         <div class="f-social">
           <a class="fsoc" href="https://facebook.com" target="_blank"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
@@ -1024,7 +1019,6 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
     <a class="mni on" href="#"><span class="mni-ic">🏠</span><span class="mni-lb">Kreu</span></a>
     <a class="mni" href="#fleet"><span class="mni-ic">🚗</span><span class="mni-lb">Vetura</span></a>
     <button class="mni mni-main" onclick="doSearch()"><span class="mni-ic">🔍</span><span class="mni-lb">Kërko</span></button>
-    <button class="mni" onclick="openM('reg-biz')"><span class="mni-ic">🏢</span><span class="mni-lb">Agjencia</span></button>
     <button class="mni" onclick="openM('login')"><span class="mni-ic">👤</span><span class="mni-lb">Hyr</span></button>
   </div>
 </nav>
