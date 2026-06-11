@@ -22,7 +22,8 @@ router.get('/profile', authMiddleware, bizOnly, async (req, res) => {
     );
     res.json(result.rows[0]);
   } catch (err) {
-    res.status(500).json({ error: 'Gabim serveri.' });
+    console.error('[GET /profile]', err.message);
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -37,7 +38,8 @@ router.put('/profile', authMiddleware, bizOnly, async (req, res) => {
     );
     res.json({ message: 'Profili u përditësua!', business: result.rows[0] });
   } catch (err) {
-    res.status(500).json({ error: 'Gabim serveri.' });
+    console.error('[PUT /profile]', err.message);
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -52,7 +54,8 @@ router.get('/vehicles', authMiddleware, bizOnly, async (req, res) => {
     );
     res.json(result.rows);
   } catch (err) {
-    res.status(500).json({ error: 'Gabim serveri.' });
+    console.error('[GET /vehicles]', err.message);
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -143,7 +146,8 @@ router.delete('/vehicles/:id', authMiddleware, bizOnly, async (req, res) => {
 
     res.json({ message: 'Vetura u fshi.' });
   } catch (err) {
-    res.status(500).json({ error: 'Gabim serveri.' });
+    console.error('[DELETE /vehicles/:id]', err.message);
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -168,7 +172,8 @@ router.get('/bookings', authMiddleware, bizOnly, async (req, res) => {
     const result = await pool.query(query, params);
     res.json(result.rows);
   } catch (err) {
-    res.status(500).json({ error: 'Gabim serveri.' });
+    console.error('[GET /bookings]', err.message);
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -189,8 +194,8 @@ router.put('/bookings/:id', authMiddleware, bizOnly, async (req, res) => {
     if (check.rows.length === 0) return res.status(404).json({ error: 'Rezervimi nuk u gjet.' });
 
     const result = await pool.query(
-      'UPDATE bookings SET status=$1, updated_at=NOW() WHERE id=$2 RETURNING *',
-      [status, id]
+      'UPDATE bookings SET status=$1 WHERE id=$2 AND business_id=$3 RETURNING *',
+      [status, id, req.user.id]
     );
 
     const messages = {
@@ -201,7 +206,8 @@ router.put('/bookings/:id', authMiddleware, bizOnly, async (req, res) => {
 
     res.json({ message: messages[status], booking: result.rows[0] });
   } catch (err) {
-    res.status(500).json({ error: 'Gabim serveri.' });
+    console.error('[PUT /bookings/:id] error:', err.message);
+    res.status(500).json({ error: err.message || 'Gabim serveri.' });
   }
 });
 
