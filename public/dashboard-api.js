@@ -241,7 +241,7 @@ function renderFleetCards(vehicles) {
           <div class="fc-avail-label">7 ditë të ardhshme</div>
           <div class="fc-avail">${dots}</div>
           <div class="fc-actions">
-            <button class="fc-btn edit" onclick="openEditVehicle(${v.id},'${v.brand} ${v.model}',${v.price_per_day},'${status}','${loc}','${feat}')">Edito</button>
+            <button class="fc-btn edit" onclick="enterEditVehicleForm(_fleetVehicles.find(x=>x.id===${v.id}))">Edito</button>
             <button class="fc-btn del" onclick="deleteVehicle(${v.id})">Fshij</button>
           </div>
         </div>
@@ -339,39 +339,108 @@ async function addVehicle() {
   }
 }
 
-// ── Edit Vehicle Modal ──
-function openEditVehicle(id, name, price, status, location, features) {
-  const b = document.getElementById('mb');
-  b.innerHTML = `
-    <div class="mh">Edito — ${name}</div>
-    <p class="ms">Ndrysho të dhënat e veturës.</p>
-    <div class="mfg2">
-      <div class="mfg"><label>Çmimi / ditë (€)</label><input id="ev-price" type="number" value="${price}"/></div>
-      <div class="mfg"><label>Statusi</label><select id="ev-status">
-        <option value="active" ${status==='active'?'selected':''}>Aktive</option>
-        <option value="inactive" ${status==='inactive'?'selected':''}>Joaktive</option>
-        <option value="maintenance" ${status==='maintenance'?'selected':''}>Mirëmbajtje</option>
-      </select></div>
-    </div>
-    <div class="mfg"><label>Lokacioni</label><input id="ev-location" type="text" value="${location}" placeholder="Prishtinë, Aeroporti"/></div>
-    <div class="mfg"><label>Pajisjet</label><input id="ev-features" type="text" value="${features}" placeholder="A/C, GPS, Bluetooth..."/></div>
-    <button class="btn-mf" onclick="saveVehicleEdit(${id})">Ruaj Ndryshimet</button>`;
-  document.getElementById('ov').classList.add('open');
+// ── Edit Vehicle — inline form ──
+function setSelectByText(id, text) {
+  const el = document.getElementById(id);
+  if (!el || text == null) return;
+  const val = String(text);
+  for (const opt of el.options) {
+    if (opt.value === val || opt.text === val) { opt.selected = true; return; }
+  }
 }
 
-async function saveVehicleEdit(id) {
-  const body = {
-    price_per_day: parseFloat(document.getElementById('ev-price')?.value),
-    status: document.getElementById('ev-status')?.value,
-    location: document.getElementById('ev-location')?.value?.trim(),
-    features: document.getElementById('ev-features')?.value?.trim()
-  };
+function resetFormToAddMode() {
+  document.getElementById('v-edit-id').value = '';
+  ['v-model','v-year','v-price','v-location','v-features','v-description'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  const titleEl = document.getElementById('fp-title');
+  const subEl = document.getElementById('fp-sub');
+  const saveBtn = document.getElementById('save-car-btn');
+  if (titleEl) titleEl.textContent = 'Shto Veturë të Re';
+  if (subEl) subEl.textContent = 'Plotëso të dhënat e veturës. Do të shfaqet në platformë pas aprovimit.';
+  if (saveBtn) saveBtn.textContent = 'Ruaj Veturën';
+  const addBtn = document.getElementById('btn-cancel-add');
+  const editBtn = document.getElementById('btn-cancel-edit');
+  if (addBtn) addBtn.style.display = '';
+  if (editBtn) editBtn.style.display = 'none';
+}
+
+function enterEditVehicleForm(v) {
+  if (!v) return;
+  document.getElementById('v-edit-id').value = v.id;
+  setSelectByText('v-brand', v.brand);
+  document.getElementById('v-model').value = v.model || '';
+  document.getElementById('v-year').value = v.year || '';
+  setSelectByText('v-fuel', v.fuel);
+  setSelectByText('v-transmission', v.transmission);
+  setSelectByText('v-seats', String(v.seats || ''));
+  document.getElementById('v-price').value = v.price_per_day || '';
+  document.getElementById('v-location').value = v.location || '';
+  document.getElementById('v-features').value = v.features || '';
+  document.getElementById('v-description').value = v.description || '';
+
+  const titleEl = document.getElementById('fp-title');
+  const subEl = document.getElementById('fp-sub');
+  const saveBtn = document.getElementById('save-car-btn');
+  if (titleEl) titleEl.textContent = 'Edito Veturën';
+  if (subEl) subEl.textContent = `${v.brand} ${v.model} ${v.year} — ndrysho të dhënat.`;
+  if (saveBtn) saveBtn.textContent = 'Ruaj Ndryshimet';
+  const addBtn = document.getElementById('btn-cancel-add');
+  const editBtn = document.getElementById('btn-cancel-edit');
+  if (addBtn) addBtn.style.display = 'none';
+  if (editBtn) editBtn.style.display = '';
+
+  goPage('fleet', document.querySelector('[onclick*="fleet"]'));
+  const form = document.getElementById('add-car-form');
+  form.classList.add('open');
+  form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function cancelEditVehicle() {
+  resetFormToAddMode();
+  document.getElementById('add-car-form').classList.remove('open');
+}
+
+function submitVehicleForm() {
+  const editId = parseInt(document.getElementById('v-edit-id')?.value || '0');
+  if (editId) {
+    updateVehicleForm(editId);
+  } else {
+    addVehicle();
+  }
+}
+
+async function updateVehicleForm(id) {
+  const btn = document.getElementById('save-car-btn');
+  if (btn) btn.disabled = true;
   try {
+    const body = {
+      brand:         document.getElementById('v-brand')?.value,
+      model:         document.getElementById('v-model')?.value?.trim(),
+      year:          parseInt(document.getElementById('v-year')?.value),
+      fuel:          document.getElementById('v-fuel')?.value,
+      transmission:  document.getElementById('v-transmission')?.value,
+      price_per_day: parseFloat(document.getElementById('v-price')?.value),
+      seats:         parseInt(document.getElementById('v-seats')?.value),
+      location:      document.getElementById('v-location')?.value?.trim(),
+      features:      document.getElementById('v-features')?.value?.trim(),
+      description:   document.getElementById('v-description')?.value?.trim(),
+    };
+    if (!body.brand || !body.model || !body.price_per_day) {
+      dashToast('Plotëso: Marka, Modeli dhe Çmimi!', 'error');
+      return;
+    }
     await apiCall(`/businesses/vehicles/${id}`, 'PUT', body);
     dashToast('Vetura u ruajt! ✓', 'success');
-    document.getElementById('ov').classList.remove('open');
+    cancelEditVehicle();
     loadVehicles();
-  } catch(err) { dashToast(err.message, 'error'); }
+    loadStats();
+  } catch(err) {
+    dashToast(err.message, 'error');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Ruaj Ndryshimet'; }
+  }
 }
 
 // ── Delete Vehicle ──

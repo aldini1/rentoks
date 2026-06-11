@@ -627,8 +627,9 @@ tr:hover td{background:var(--paper);}
 
       <!-- Add Car Form -->
       <div class="form-panel" id="add-car-form">
-        <div class="fp-title">Shto Veturë të Re</div>
-        <div class="fp-sub">Plotëso të dhënat e veturës. Do të shfaqet në platformë pas aprovimit.</div>
+        <input type="hidden" id="v-edit-id" value="">
+        <div class="fp-title" id="fp-title">Shto Veturë të Re</div>
+        <div class="fp-sub" id="fp-sub">Plotëso të dhënat e veturës. Do të shfaqet në platformë pas aprovimit.</div>
         <div class="form-grid">
           <div class="fg"><label>Marka</label><select id="v-brand"><option>Volkswagen</option><option>BMW</option><option>Mercedes</option><option>Audi</option><option>Toyota</option><option>Skoda</option><option>Ford</option><option>Renault</option></select></div>
           <div class="fg"><label>Modeli</label><input id="v-model" type="text" placeholder="p.sh. Golf 7"/></div>
@@ -663,8 +664,9 @@ tr:hover td{background:var(--paper);}
           </div>
         </div>
         <div class="form-actions">
-          <button id="save-car-btn" class="btn-save" onclick="addVehicle()">Ruaj Veturën</button>
-          <button class="btn-cancel" onclick="hideAddCar()">Anulo</button>
+          <button id="save-car-btn" class="btn-save" onclick="submitVehicleForm()">Ruaj Veturën</button>
+          <button class="btn-cancel" id="btn-cancel-add" onclick="hideAddCar()">Anulo</button>
+          <button class="btn-cancel" id="btn-cancel-edit" style="display:none" onclick="cancelEditVehicle()">Anulo Editimin</button>
         </div>
       </div>
 
@@ -1048,6 +1050,7 @@ function clearNotifs() {
 
 // ── ADD CAR ──
 function showAddCar() {
+  if (typeof resetFormToAddMode === 'function') resetFormToAddMode();
   const form = document.getElementById('add-car-form');
   form.classList.add('open');
   goPage('fleet', document.querySelector('[onclick*="fleet"]'));
@@ -1057,16 +1060,6 @@ function hideAddCar() {
   document.getElementById('add-car-form').classList.remove('open');
 }
 
-// ── EDIT CAR MODAL ──
-function openEditCar(name) {
-  const b = document.getElementById('mb');
-  b.innerHTML = `<div class="mh">Edito — ${name}</div><p class="ms">Ndrysho të dhënat e veturës.</p>
-  <div class="mfg2"><div class="mfg"><label>Çmimi / ditë (€)</label><input type="number" placeholder="35"/></div><div class="mfg"><label>Statusi</label><select><option>Aktive</option><option>Joaktive</option><option>Mirëmbajtje</option></select></div></div>
-  <div class="mfg"><label>Lokacioni</label><input type="text" placeholder="Prishtinë, Aeroporti"/></div>
-  <div class="mfg"><label>Pajisjet</label><input type="text" placeholder="A/C, GPS, Bluetooth..."/></div>
-  <button class="btn-mf" onclick="showToast('Vetura u ruajt! ✓');cM()">Ruaj Ndryshimet</button>`;
-  document.getElementById('ov').classList.add('open');
-}
 
 // ── BOOKING DETAIL MODAL ──
 function openBookingDetail() {
