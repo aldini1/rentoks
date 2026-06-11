@@ -191,26 +191,70 @@ tr:hover td{background:var(--paper);}
 .ph-right{display:flex;gap:10px;}
 .btn-outline{padding:9px 18px;border:1.5px solid var(--border2);background:white;color:var(--gray2);border-radius:8px;font-size:13px;font-weight:600;transition:all .15s;}
 .btn-outline:hover{border-color:var(--ink);color:var(--ink);}
-.btn-solid{padding:9px 18px;background:var(--ink);color:white;border-radius:8px;font-size:13px;font-weight:700;transition:all .15s;display:flex;align-items:center;gap:6px;}
-.btn-solid:hover{background:var(--blue);transform:translateY(-1px);}
+.btn-solid{padding:9px 18px;background:var(--lime);color:var(--ink);border-radius:8px;font-size:13px;font-weight:700;transition:all .15s;display:flex;align-items:center;gap:6px;}
+.btn-solid:hover{background:var(--lime2);transform:translateY(-1px);box-shadow:0 4px 12px rgba(200,255,0,.3);}
 
+/* ── Fleet filters ── */
+.fleet-topbar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+.fleet-search{display:flex;align-items:center;gap:8px;background:var(--paper);border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;flex:1;max-width:260px;}
+.fleet-search svg{flex-shrink:0;opacity:.4;}
+.fleet-search input{border:none;background:transparent;font-size:13px;color:var(--ink);outline:none;width:100%;}
 .fleet-filters{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
-.ff{padding:7px 16px;border:1.5px solid var(--border);background:white;border-radius:100px;font-size:13px;font-weight:600;color:var(--gray2);transition:all .15s;}
-.ff:hover,.ff.on{background:var(--ink);color:white;border-color:var(--ink);}
+.ff{padding:7px 16px;border:1.5px solid var(--border);background:transparent;border-radius:100px;font-size:13px;font-weight:600;color:var(--gray2);transition:all .2s;cursor:pointer;}
+.ff:hover{border-color:var(--gray2);color:var(--ink);}
+.ff.on{background:var(--lime);color:var(--ink);border-color:var(--lime);}
 
-.fleet-table-wrap{background:var(--white);border:1.5px solid var(--border);border-radius:16px;overflow:hidden;}
+/* ── Fleet card grid ── */
+.fleet-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.fc{background:var(--white);border:1.5px solid var(--border);border-radius:16px;overflow:hidden;transition:transform .2s cubic-bezier(.23,1,.32,1),box-shadow .2s;display:flex;flex-direction:column;}
+.fc:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.09);}
+.fc-photo{width:100%;height:160px;object-fit:cover;display:block;}
+.fc-photo-placeholder{width:100%;height:160px;background:linear-gradient(135deg,#f0efeb 0%,#e8e7e2 100%);display:flex;align-items:center;justify-content:center;}
+.fc-body{padding:16px;display:flex;flex-direction:column;flex:1;}
+.fc-name{font-family:var(--f-d);font-size:15px;font-weight:800;color:var(--ink);letter-spacing:-.3px;margin-bottom:3px;}
+.fc-meta{font-size:12px;color:var(--gray);margin-bottom:12px;}
+.fc-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.fc-price{font-family:var(--f-d);font-size:17px;font-weight:800;color:var(--ink);}
+.fc-price small{font-size:12px;font-weight:500;color:var(--gray);}
+.fc-status{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:100px;}
+.fc-status.active{background:#f0fdf4;color:#16a34a;}
+.fc-status.inactive{background:var(--paper2);color:var(--gray2);}
+.fc-status.pending{background:#fffbeb;color:#d97706;}
+.fc-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.fc-status.active .fc-dot{background:#16a34a;}
+.fc-status.inactive .fc-dot{background:var(--gray);}
+.fc-status.pending .fc-dot{background:#d97706;}
+.fc-avail-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--gray);margin-bottom:6px;}
+.fc-avail{display:flex;gap:4px;align-items:center;margin-bottom:14px;}
+.fc-avail-dot{width:9px;height:9px;border-radius:50%;}
+.fc-avail-dot.free{background:#86efac;border:1px solid #4ade80;}
+.fc-avail-dot.booked{background:#fca5a5;border:1px solid #f87171;}
+.fc-avail-dot.blocked{background:#fcd34d;border:1px solid #fbbf24;}
+.fc-avail-dot.today{background:var(--lime);border:1px solid var(--lime2);box-shadow:0 0 5px rgba(200,255,0,.6);}
+.fc-actions{display:flex;gap:8px;margin-top:auto;}
+.fc-btn{flex:1;padding:9px 0;border-radius:9px;font-size:12px;font-weight:700;transition:all .15s;text-align:center;cursor:pointer;border:1.5px solid var(--border);}
+.fc-btn.edit{background:var(--paper2);color:var(--ink);}
+.fc-btn.edit:hover{background:var(--ink);color:white;border-color:var(--ink);}
+.fc-btn.del{background:transparent;color:var(--gray);}
+.fc-btn.del:hover{background:#fff0f0;color:#e53e3e;border-color:#fca5a5;}
 
-.car-info{display:flex;align-items:center;gap:12px;}
-.car-thumb{width:64px;height:44px;border-radius:8px;overflow:hidden;flex-shrink:0;background:var(--paper2);}
-.car-thumb img{width:100%;height:100%;object-fit:cover;}
-.car-tname{font-weight:700;color:var(--ink);font-size:13px;margin-bottom:2px;}
-.car-tyear{font-size:11px;color:var(--gray);}
+/* ── Skeleton ── */
+.fc-skel{background:var(--white);border:1.5px solid var(--border);border-radius:16px;overflow:hidden;}
+.fc-skel-img{height:160px;background:linear-gradient(90deg,#f0efeb 25%,#e8e7e2 50%,#f0efeb 75%);background-size:200% 100%;animation:fskel 1.4s infinite;}
+.fc-skel-body{padding:16px;}
+.fc-skel-line{height:12px;border-radius:6px;margin-bottom:10px;background:linear-gradient(90deg,#f0efeb 25%,#e8e7e2 50%,#f0efeb 75%);background-size:200% 100%;animation:fskel 1.4s infinite;}
+@keyframes fskel{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.fc-status.maintenance{background:#fffbeb;color:#d97706;}
+.fc-status.maintenance .fc-dot{background:#d97706;}
+.fc-empty{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:64px 24px;text-align:center;}
+.fc-empty-title{font-family:var(--f-d);font-size:18px;font-weight:800;color:var(--ink);margin-top:16px;margin-bottom:6px;}
+.fc-empty-sub{font-size:14px;color:var(--gray);}
 
-.avail-bar{display:flex;gap:3px;align-items:center;}
-.ab-day{width:10px;height:10px;border-radius:3px;}
-.ab-day.free{background:var(--green-light);border:1px solid #86efac;}
-.ab-day.booked{background:var(--red-light);border:1px solid #fca5a5;}
-.ab-day.today{background:var(--lime);border:1px solid var(--lime2);}
+/* ── Empty state ── */
+.fleet-empty{grid-column:1/-1;text-align:center;padding:80px 20px;}
+.fleet-empty-icon{margin-bottom:20px;opacity:.35;}
+.fleet-empty-title{font-family:var(--f-d);font-size:22px;font-weight:800;color:var(--ink);margin-bottom:8px;letter-spacing:-.3px;}
+.fleet-empty-sub{font-size:14px;color:var(--gray);margin-bottom:28px;}
 
 /* ══ ADD/EDIT VEHICLE FORM ══ */
 .form-panel{background:var(--white);border:1.5px solid var(--border);border-radius:16px;padding:28px;display:none;}
@@ -365,6 +409,8 @@ tr:hover td{background:var(--paper);}
   .settings-grid{grid-template-columns:1fr;}
   .form-grid{grid-template-columns:1fr;}
   .form-grid.three{grid-template-columns:1fr 1fr;}
+  .fleet-grid{grid-template-columns:1fr;}
+  .fleet-search{max-width:100%;}
   .content{padding:16px;}
   .topbar{padding:0 16px;}
   .tb-search{display:none;}
@@ -571,7 +617,10 @@ tr:hover td{background:var(--paper);}
           <div class="ph-sub">8 vetura të regjistruara · 6 aktive</div>
         </div>
         <div class="ph-right">
-          <button class="btn-outline">Eksporto CSV</button>
+          <div class="fleet-search">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" placeholder="Kërko veturë..." oninput="searchFleet(this.value)">
+          </div>
           <button class="btn-solid" onclick="showAddCar()">+ Shto Veturë</button>
         </div>
       </div>
@@ -620,55 +669,14 @@ tr:hover td{background:var(--paper);}
       </div>
 
       <div class="fleet-filters">
-        <button class="ff on">Të gjitha</button>
-        <button class="ff">Aktive</button>
-        <button class="ff">Të rezervuara</button>
-        <button class="ff">Të lira</button>
-        <button class="ff">Joaktive</button>
+        <button class="ff on" onclick="filterFleet('all',this)">Të gjitha</button>
+        <button class="ff" onclick="filterFleet('active',this)">Aktive</button>
+        <button class="ff" onclick="filterFleet('inactive',this)">Joaktive</button>
+        <button class="ff" onclick="filterFleet('maintenance',this)">Mirëmbajtje</button>
       </div>
 
-      <div class="fleet-table-wrap">
-        <table>
-          <thead><tr><th>Vetura</th><th>Çmimi</th><th>Statusi</th><th>Disponueshmëria (7 ditë)</th><th>Rezervime</th><th>Të ardhura</th><th>Veprimet</th></tr></thead>
-          <tbody>
-            <tr>
-              <td><div class="car-info"><div class="car-thumb"><img src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=120&q=70" alt=""/></div><div><div class="car-tname">VW Golf 7 2019</div><div class="car-tyear">Automatik · Diesel · 5 vende</div></div></div></td>
-              <td><strong>€35/ditë</strong></td>
-              <td><span class="status active">Aktive</span></td>
-              <td><div class="avail-bar"><div class="ab-day booked"></div><div class="ab-day booked"></div><div class="ab-day today"></div><div class="ab-day free"></div><div class="ab-day free"></div><div class="ab-day booked"></div><div class="ab-day booked"></div></div></td>
-              <td>12 total</td>
-              <td><strong>€840</strong></td>
-              <td><div class="td-actions"><button class="btn-sm view" onclick="openEditCar('VW Golf 7')">Edito</button><button class="btn-sm cancel">Çaktivizo</button></div></td>
-            </tr>
-            <tr>
-              <td><div class="car-info"><div class="car-thumb"><img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=120&q=70" alt=""/></div><div><div class="car-tname">BMW 5 Series 2021</div><div class="car-tyear">Automatik · Benzinë · 5 vende</div></div></div></td>
-              <td><strong>€75/ditë</strong></td>
-              <td><span class="status confirmed">Konfirmuar</span></td>
-              <td><div class="avail-bar"><div class="ab-day free"></div><div class="ab-day free"></div><div class="ab-day today"></div><div class="ab-day booked"></div><div class="ab-day booked"></div><div class="ab-day booked"></div><div class="ab-day booked"></div></div></td>
-              <td>8 total</td>
-              <td><strong>€1,200</strong></td>
-              <td><div class="td-actions"><button class="btn-sm view" onclick="openEditCar('BMW 5 Series')">Edito</button><button class="btn-sm cancel">Çaktivizo</button></div></td>
-            </tr>
-            <tr>
-              <td><div class="car-info"><div class="car-thumb"><img src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=120&q=70" alt=""/></div><div><div class="car-tname">Toyota RAV4 2022</div><div class="car-tyear">Automatik · Hibrid · 5 vende</div></div></div></td>
-              <td><strong>€55/ditë</strong></td>
-              <td><span class="status active">Aktive</span></td>
-              <td><div class="avail-bar"><div class="ab-day booked"></div><div class="ab-day today"></div><div class="ab-day free"></div><div class="ab-day free"></div><div class="ab-day free"></div><div class="ab-day booked"></div><div class="ab-day free"></div></div></td>
-              <td>6 total</td>
-              <td><strong>€660</strong></td>
-              <td><div class="td-actions"><button class="btn-sm view" onclick="openEditCar('Toyota RAV4')">Edito</button><button class="btn-sm cancel">Çaktivizo</button></div></td>
-            </tr>
-            <tr>
-              <td><div class="car-info"><div class="car-thumb"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=120&q=70" alt=""/></div><div><div class="car-tname">Mercedes Vito 2020</div><div class="car-tyear">Manuale · Diesel · 8 vende</div></div></div></td>
-              <td><strong>€65/ditë</strong></td>
-              <td><span class="status pending">Në pritje</span></td>
-              <td><div class="avail-bar"><div class="ab-day free"></div><div class="ab-day free"></div><div class="ab-day today"></div><div class="ab-day free"></div><div class="ab-day booked"></div><div class="ab-day booked"></div><div class="ab-day free"></div></div></td>
-              <td>4 total</td>
-              <td><strong>€520</strong></td>
-              <td><div class="td-actions"><button class="btn-sm view" onclick="openEditCar('Mercedes Vito')">Edito</button><button class="btn-sm cancel">Çaktivizo</button></div></td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="fleet-grid" id="fleet-grid">
+        <!-- rendered by loadVehicles() -->
       </div>
     </div>
 

@@ -183,53 +183,100 @@ function dashLogout() {
   window.location.href = '/';
 }
 
+// ── Fleet helpers ──
+let _fleetVehicles = [];
+
+function showFleetSkeleton() {
+  const grid = document.getElementById('fleet-grid');
+  if (!grid) return;
+  grid.innerHTML = Array.from({length: 6}, () => `
+    <div class="fc-skel">
+      <div class="fc-skel-img"></div>
+      <div class="fc-skel-body">
+        <div class="fc-skel-line" style="width:65%"></div>
+        <div class="fc-skel-line" style="width:40%;margin-top:6px"></div>
+        <div class="fc-skel-line" style="width:80%;margin-top:14px"></div>
+      </div>
+    </div>`).join('');
+}
+
+function renderFleetCards(vehicles) {
+  const grid = document.getElementById('fleet-grid');
+  if (!grid) return;
+
+  if (!vehicles.length) {
+    grid.innerHTML = `
+      <div class="fc-empty">
+        <svg width="52" height="40" viewBox="0 0 52 40" fill="none"><rect x="2" y="10" width="48" height="24" rx="6" stroke="#ccc" stroke-width="2.5"/><path d="M6 10l4-8h32l4 8" stroke="#ccc" stroke-width="2.5" stroke-linejoin="round"/><circle cx="14" cy="34" r="4" stroke="#ccc" stroke-width="2"/><circle cx="38" cy="34" r="4" stroke="#ccc" stroke-width="2"/></svg>
+        <div class="fc-empty-title">Nuk ka vetura</div>
+        <div class="fc-empty-sub">Shto veturën e parë →</div>
+        <button class="btn-solid" onclick="showAddCar()" style="margin-top:20px;padding:10px 24px;border-radius:10px;font-size:13px;">+ Shto Veturë</button>
+      </div>`;
+    return;
+  }
+
+  const statusLabel = { active: 'Aktive', inactive: 'Joaktive', maintenance: 'Mirëmbajtje' };
+
+  grid.innerHTML = vehicles.map(v => {
+    const status = v.status || 'active';
+    const photos = Array.isArray(v.photo_urls) ? v.photo_urls.filter(Boolean) : [];
+    const photoHtml = photos.length
+      ? `<img class="fc-photo" src="${photos[0]}" alt="${v.brand} ${v.model}" loading="lazy">`
+      : `<div class="fc-photo-placeholder"><svg width="52" height="38" viewBox="0 0 52 38" fill="none"><rect x="2" y="8" width="48" height="24" rx="5" stroke="#ccc" stroke-width="2"/><path d="M6 8l4-6h32l4 6" stroke="#ccc" stroke-width="2" stroke-linejoin="round"/><circle cx="14" cy="32" r="3.5" stroke="#ccc" stroke-width="1.5"/><circle cx="38" cy="32" r="3.5" stroke="#ccc" stroke-width="1.5"/></svg></div>`;
+    const dots = Array.from({length: 7}, (_, i) =>
+      `<div class="fc-avail-dot ${i === 0 ? 'today' : 'free'}" title="${i === 0 ? 'Sot' : 'I lirë'}"></div>`).join('');
+    const loc = (v.location || '').replace(/'/g, '&#39;');
+    const feat = (v.features || '').replace(/'/g, '&#39;');
+
+    return `
+      <div class="fc" data-id="${v.id}" data-status="${status}">
+        ${photoHtml}
+        <div class="fc-body">
+          <div class="fc-name">${v.brand} ${v.model} ${v.year}</div>
+          <div class="fc-meta">${v.transmission || '—'} · ${v.fuel || '—'} · ${v.seats || '—'} vende</div>
+          <div class="fc-row">
+            <div class="fc-price">€${v.price_per_day}<small>/ditë</small></div>
+            <span class="fc-status ${status}"><div class="fc-dot"></div>${statusLabel[status] || status}</span>
+          </div>
+          <div class="fc-avail-label">7 ditë të ardhshme</div>
+          <div class="fc-avail">${dots}</div>
+          <div class="fc-actions">
+            <button class="fc-btn edit" onclick="openEditVehicle(${v.id},'${v.brand} ${v.model}',${v.price_per_day},'${status}','${loc}','${feat}')">Edito</button>
+            <button class="fc-btn del" onclick="deleteVehicle(${v.id})">Fshij</button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function filterFleet(status, btn) {
+  document.querySelectorAll('.ff').forEach(b => b.classList.remove('on'));
+  if (btn) btn.classList.add('on');
+  renderFleetCards(status === 'all' ? _fleetVehicles : _fleetVehicles.filter(v => v.status === status));
+}
+
+function searchFleet(query) {
+  const q = (query || '').toLowerCase().trim();
+  renderFleetCards(!q ? _fleetVehicles : _fleetVehicles.filter(v =>
+    `${v.brand} ${v.model} ${v.year}`.toLowerCase().includes(q)));
+}
+
 // ── Load Vehicles (Fleet page) ──
 async function loadVehicles() {
+  showFleetSkeleton();
   try {
     const vehicles = await apiCall('/businesses/vehicles');
-    const tbody = document.querySelector('#page-fleet .fleet-table-wrap tbody');
-    if (!tbody) return;
-
+    _fleetVehicles = vehicles;
     const phSub = document.querySelector('#page-fleet .ph-sub');
     if (phSub) phSub.textContent = `${vehicles.length} vetura të regjistruara`;
-
-    if (vehicles.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--gray);">Nuk ke vetura akoma. Shto veturën e parë!</td></tr>';
-      return;
-    }
-
-    const statusMap = {
-      active: '<span class="status active">Aktive</span>',
-      inactive: '<span class="status cancelled">Joaktive</span>',
-      maintenance: '<span class="status pending">Mirëmbajtje</span>'
-    };
-
-    tbody.innerHTML = vehicles.map(v => `
-      <tr>
-        <td><div class="car-info">
-          ${Array.isArray(v.photo_urls) && v.photo_urls.length
-            ? `<div class="car-thumb"><img src="${v.photo_urls[0]}" style="width:64px;height:44px;object-fit:cover;border-radius:8px;display:block;"></div>`
-            : `<div class="car-thumb" style="background:var(--paper2);display:flex;align-items:center;justify-content:center;font-size:20px;">🚗</div>`}
-          <div><div class="car-tname">${v.brand} ${v.model} ${v.year}</div>
-          <div class="car-tyear">${v.transmission || '—'} · ${v.fuel || '—'} · ${v.seats || '—'} vende</div></div>
-        </div></td>
-        <td><strong>€${v.price_per_day}/ditë</strong></td>
-        <td>${statusMap[v.status] || statusMap['active']}</td>
-        <td><div class="avail-bar">
-          <div class="ab-day today"></div><div class="ab-day free"></div>
-          <div class="ab-day free"></div><div class="ab-day free"></div>
-          <div class="ab-day free"></div><div class="ab-day free"></div>
-          <div class="ab-day free"></div>
-        </div></td>
-        <td>—</td>
-        <td>—</td>
-        <td><div class="td-actions">
-          <button class="btn-sm view" onclick="openEditVehicle(${v.id},'${v.brand} ${v.model}',${v.price_per_day},'${v.status||'active'}','${v.location||''}','${v.features||''}')">Edito</button>
-          <button class="btn-sm cancel" onclick="deleteVehicle(${v.id})">Fshij</button>
-        </div></td>
-      </tr>
-    `).join('');
-  } catch(err) { console.error('Vehicles error:', err); dashToast('Gabim në ngarkimin e flotës', 'error'); }
+    document.querySelectorAll('.ff').forEach((b, i) => b.classList.toggle('on', i === 0));
+    renderFleetCards(vehicles);
+  } catch(err) {
+    console.error('Vehicles error:', err);
+    dashToast('Gabim në ngarkimin e flotës', 'error');
+    const grid = document.getElementById('fleet-grid');
+    if (grid) grid.innerHTML = '<div class="fc-empty"><div class="fc-empty-title">Gabim gjatë ngarkimit</div></div>';
+  }
 }
 
 // ── Add Vehicle ──
