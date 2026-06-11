@@ -85,7 +85,7 @@ router.get('/:id', async (req, res) => {
     res.json(result.rows[0]);
   } catch (err) {
     console.error('GET /api/vehicles/:id:', err.message);
-    res.status(500).json({ error: 'Gabim serveri.' });
+    res.status(500).json({ error: err.message });
   }
 });
 
