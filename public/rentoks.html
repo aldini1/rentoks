@@ -59,17 +59,14 @@ input,select{font-family:var(--f-b);}
   border-bottom:1px solid rgba(200,255,0,.1);
   box-shadow:0 1px 0 rgba(200,255,0,.04),0 4px 24px rgba(0,0,0,.4);
 }
-.nav.hero-zone .nav-logo{color:white;text-shadow:0 0 28px rgba(200,255,0,.5),0 0 50px rgba(200,255,0,.15);}
 .nav.hero-zone .nav-links a{color:rgba(255,255,255,0.55);}
 .nav.hero-zone .nav-links a:hover{color:white;background:rgba(255,255,255,0.06);}
 .nav.hero-zone .n-ghost{border-color:rgba(255,255,255,0.18);color:rgba(255,255,255,.8);}
 .nav.hero-zone .n-ghost:hover{border-color:rgba(200,255,0,.5);color:white;}
 .nav.hero-zone .n-cta{background:var(--lime);color:var(--ink);}
-.nav-logo{
-  font-family:var(--f-d);font-size:20px;font-weight:800;color:white;
-  letter-spacing:-0.5px;margin-right:auto;transition:all .3s;
-}
-.nav-logo sup{font-size:9px;font-weight:700;background:var(--lime);color:var(--ink);padding:2px 5px;border-radius:4px;vertical-align:super;letter-spacing:0;}
+.logo{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:800;letter-spacing:-1px;color:white;display:flex;align-items:center;gap:8px;text-decoration:none;}
+.logo-badge{width:32px;height:32px;background:#c8ff00;color:#080808;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;flex-shrink:0;}
+.nav .logo{margin-right:auto;}
 .nav-links{display:flex;list-style:none;gap:2px;}
 .nav-links a{font-size:13px;font-weight:500;color:rgba(255,255,255,.5);padding:6px 12px;border-radius:6px;transition:all .15s;}
 .nav-links a:hover{color:white;background:rgba(255,255,255,.06);}
@@ -620,7 +617,7 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
 
 <!-- NAV -->
 <nav class="nav hero-zone" id="nav">
-  <div class="nav-logo">Rentoks <sup>KS</sup></div>
+  <a class="logo" href="/"><span class="logo-badge">R</span>entoks</a>
   <ul class="nav-links">
     <li><a href="#fleet">Vetura</a></li>
     <li><a href="#si-funksionon">Si funksionon</a></li>
@@ -998,7 +995,7 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
   <div class="wrap">
     <div class="footer-grid">
       <div>
-        <div class="f-logo">Rent<span>oks</span></div>
+        <div class="logo" style="margin-bottom:12px;"><span class="logo-badge">R</span>entoks</div>
         <p class="f-desc">Marketplace i parë i car rental në Kosovë. Vetëm agjenci të verifikuara.</p>
         <div class="f-social">
           <a class="fsoc" href="https://facebook.com" target="_blank"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
