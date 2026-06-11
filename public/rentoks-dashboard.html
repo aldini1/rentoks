@@ -654,6 +654,10 @@ tr:hover td{background:var(--paper);}
         </div>
         <div class="form-grid full">
           <div class="fg"><label>Fotografi (min 4)</label>
+            <div id="existing-photos-zone" style="display:none;margin-bottom:12px;">
+              <div id="existing-photos-label" style="font-size:12px;font-weight:700;color:var(--gray);margin-bottom:8px;"></div>
+              <div id="existing-photos-list" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+            </div>
             <label class="photo-upload" id="photo-drop">
               <span class="pu-icon">📸</span>
               <span class="pu-text">Kliko ose tërhiq fotot këtu</span>
@@ -1152,33 +1156,10 @@ function addPhotoFiles(files) {
   renderPhotoPreviews();
 }
 
+// Renders newly-selected files in #photo-previews (existing photos use #existing-photos-zone)
 function renderPhotoPreviews() {
   const c = document.getElementById('photo-previews');
   c.innerHTML = '';
-
-  if (_existingPhotoUrls.length > 0) {
-    const lbl = document.createElement('div');
-    lbl.style.cssText = 'width:100%;font-size:12px;font-weight:600;color:var(--gray);margin-bottom:6px;';
-    lbl.textContent = `${_existingPhotoUrls.length} foto ekzistuese · Shto më shumë`;
-    c.appendChild(lbl);
-  }
-
-  _existingPhotoUrls.forEach((url, i) => {
-    const wrap = document.createElement('div');
-    wrap.className = 'photo-thumb';
-    const img = document.createElement('img');
-    img.src = url;
-    img.alt = '';
-    const rm = document.createElement('button');
-    rm.className = 'pt-rm';
-    rm.textContent = '×';
-    rm.type = 'button';
-    rm.title = 'Hiq foton';
-    rm.onclick = e => { e.preventDefault(); _existingPhotoUrls.splice(i, 1); renderPhotoPreviews(); };
-    wrap.append(img, rm);
-    c.appendChild(wrap);
-  });
-
   selectedFiles.forEach((file, i) => {
     const wrap = document.createElement('div');
     wrap.className = 'photo-thumb';
@@ -1192,6 +1173,51 @@ function renderPhotoPreviews() {
     wrap.append(img, rm);
     c.appendChild(wrap);
   });
+}
+
+// Renders existing (already-uploaded) photos into #existing-photos-zone
+function renderExistingPhotos() {
+  const zone = document.getElementById('existing-photos-zone');
+  const list = document.getElementById('existing-photos-list');
+  const lbl  = document.getElementById('existing-photos-label');
+  if (!zone || !list || !lbl) return;
+
+  console.log('[renderExistingPhotos] count:', _existingPhotoUrls.length, _existingPhotoUrls);
+
+  if (_existingPhotoUrls.length === 0) {
+    zone.style.display = 'none';
+    list.innerHTML = '';
+    return;
+  }
+
+  lbl.textContent = `${_existingPhotoUrls.length} foto ekzistuese · Shto më shumë`;
+  zone.style.display = '';
+  list.innerHTML = '';
+
+  _existingPhotoUrls.forEach((url, i) => {
+    const item = document.createElement('div');
+    item.className = 'photo-thumb';
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = '';
+    img.style.cssText = 'width:80px;height:80px;object-fit:cover;border-radius:8px;display:block;';
+    const rm = document.createElement('button');
+    rm.className = 'pt-rm';
+    rm.type = 'button';
+    rm.title = 'Hiq foton';
+    rm.textContent = '×';
+    rm.dataset.url = url;
+    rm.onclick = e => { e.preventDefault(); removeExistingPhoto(e.currentTarget.dataset.url); };
+    item.append(img, rm);
+    list.appendChild(item);
+  });
+}
+
+function removeExistingPhoto(url) {
+  console.log('[removeExistingPhoto] removing:', url);
+  const idx = _existingPhotoUrls.indexOf(url);
+  if (idx !== -1) _existingPhotoUrls.splice(idx, 1);
+  renderExistingPhotos();
 }
 
 // addVehicle() is defined in dashboard-api.js

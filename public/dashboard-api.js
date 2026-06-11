@@ -367,10 +367,14 @@ function resetFormToAddMode() {
   if (typeof _existingPhotoUrls !== 'undefined') _existingPhotoUrls.length = 0;
   if (typeof selectedFiles !== 'undefined') selectedFiles.length = 0;
   if (typeof renderPhotoPreviews === 'function') renderPhotoPreviews();
+  if (typeof renderExistingPhotos === 'function') renderExistingPhotos();
 }
 
 function enterEditVehicleForm(v) {
-  if (!v) return;
+  console.log('[enterEditVehicleForm] vehicle object:', v);
+  console.log('[enterEditVehicleForm] photo_urls raw:', v && v.photo_urls);
+  if (!v) { console.warn('[enterEditVehicleForm] no vehicle found'); return; }
+
   document.getElementById('v-edit-id').value = v.id;
   setSelectByText('v-brand', v.brand);
   document.getElementById('v-model').value = v.model || '';
@@ -383,13 +387,16 @@ function enterEditVehicleForm(v) {
   document.getElementById('v-features').value = v.features || '';
   document.getElementById('v-description').value = v.description || '';
 
-  // Load existing photos
+  // Populate existing photos
   if (typeof _existingPhotoUrls !== 'undefined') {
     _existingPhotoUrls.length = 0;
-    (Array.isArray(v.photo_urls) ? v.photo_urls : []).filter(Boolean).forEach(u => _existingPhotoUrls.push(u));
+    const photos = Array.isArray(v.photo_urls) ? v.photo_urls : [];
+    photos.filter(Boolean).forEach(u => _existingPhotoUrls.push(u));
+    console.log('[enterEditVehicleForm] _existingPhotoUrls after set:', _existingPhotoUrls.length, _existingPhotoUrls);
   }
   if (typeof selectedFiles !== 'undefined') selectedFiles.length = 0;
   if (typeof renderPhotoPreviews === 'function') renderPhotoPreviews();
+  if (typeof renderExistingPhotos === 'function') renderExistingPhotos();
 
   const titleEl = document.getElementById('fp-title');
   const subEl = document.getElementById('fp-sub');
