@@ -40,7 +40,7 @@ router.get('/debug', async (req, res) => {
 // GET /api/vehicles — lista aktive me filtrim
 router.get('/', async (req, res) => {
   try {
-    const { city, category, limit = 12 } = req.query;
+    const { city, category, exclude_id, limit = 12 } = req.query;
     let query = `
       SELECT v.*, b.business_name, b.city AS business_city
       FROM vehicles v
@@ -48,8 +48,9 @@ router.get('/', async (req, res) => {
       WHERE v.status = 'active'
     `;
     const params = [];
-    if (city)     { params.push(city);     query += ` AND v.city = $${params.length}`; }
-    if (category) { params.push(category); query += ` AND v.category = $${params.length}`; }
+    if (city)       { params.push(city);             query += ` AND v.city = $${params.length}`; }
+    if (category)   { params.push(category);          query += ` AND v.category = $${params.length}`; }
+    if (exclude_id) { params.push(parseInt(exclude_id)); query += ` AND v.id != $${params.length}`; }
     params.push(parseInt(limit));
     query += ` ORDER BY v.created_at DESC LIMIT $${params.length}`;
 

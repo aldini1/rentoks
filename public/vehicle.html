@@ -527,31 +527,36 @@ const CARD_IMGS = [
 
 // ── LOAD VEHICLE ──
 async function loadVehicle() {
-  // Rendero demo menjëherë — faqja shfaqet pa vonesë
-  _vehicle = DEMO_VEHICLE;
-  renderVehicle(DEMO_VEHICLE);
-  loadSimilar(DEMO_VEHICLE.category, DEMO_VEHICLE.id);
+  const vehicleId = new URLSearchParams(window.location.search).get('id');
+  if (!vehicleId) { window.location.href = '/'; return; }
 
-  // Nëse ka ID, provo API dhe zëvendëso demo
-  if (!VEHICLE_ID) return;
   try {
-    const res = await fetch(`/api/vehicles/${VEHICLE_ID}`);
-    if (!res.ok) return; // demo mbetet
-    const real = await res.json();
-    _vehicle = real;
-    renderVehicle(real);
-    loadSimilar(real.category, real.id);
-  } catch { /* demo mbetet */ }
+    const res = await fetch(`/api/vehicles/${vehicleId}`);
+    console.log('[vehicle] status:', res.status, 'id:', vehicleId);
+    if (!res.ok) { showNotFound(); return; }
+    const v = await res.json();
+    console.log('[vehicle] data:', v);
+    _vehicle = v;
+    renderVehicle(v);
+    loadSimilar(v.category, v.id);
+  } catch(err) {
+    console.error('[vehicle] load error:', err);
+    showNotFound();
+  }
 }
 
 function renderVehicle(v) {
   const name = `${v.brand} ${v.model}${v.year ? ' — ' + v.year : ''}`;
   document.title = `${name} — Rentoks`;
 
-  // Gallery
-  const mainImg = v.image_url || CAT_IMGS[v.category] || CAT_IMGS.default;
-  document.getElementById('gal-img-main').src = mainImg;
+  // Gallery — photo_urls array from API, fallback to category image
+  const photos = Array.isArray(v.photo_urls) && v.photo_urls.length
+    ? v.photo_urls
+    : [v.image_url || CAT_IMGS[v.category] || CAT_IMGS.default];
+  document.getElementById('gal-img-main').src = photos[0];
   document.getElementById('gal-img-main').alt = name;
+  if (photos[1]) document.getElementById('gal-img-1').src = photos[1];
+  if (photos[2]) document.getElementById('gal-img-2').src = photos[2];
 
   // Breadcrumb + Name
   document.getElementById('bc-name').textContent = name;
@@ -632,7 +637,7 @@ function renderSimilar(cars) {
   if (!cars.length) { grid.closest('.sim-section').style.display = 'none'; return; }
   grid.innerHTML = cars.slice(0, 3).map((v, i) => {
     const name = `${v.brand} ${v.model}${v.year ? ' — ' + v.year : ''}`;
-    const img  = v.image_url || CARD_IMGS[i % CARD_IMGS.length];
+    const img  = (Array.isArray(v.photo_urls) && v.photo_urls[0]) || v.image_url || CARD_IMGS[i % CARD_IMGS.length];
     return `
     <div class="vc rv d${i+1}" onclick="window.location.href='/vehicle.html?id=${v.id}'">
       <div class="vc-top">
