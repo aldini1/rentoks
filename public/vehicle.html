@@ -282,6 +282,25 @@ footer{background:#050505;color:white;padding:48px 0 28px;border-top:1px solid r
   .ov{align-items:flex-end;padding:0;}
   .modal{border-radius:20px 20px 0 0;max-width:100%;padding:24px 16px max(24px,env(safe-area-inset-bottom));}
 }
+/* ── BOOKING SUCCESS OVERLAY ── */
+.bsov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:9999;align-items:center;justify-content:center;}
+.bsov.open{display:flex;}
+.bsov-card{background:#111;border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:48px 40px;max-width:440px;width:90%;text-align:center;animation:bsov-in .4s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes bsov-in{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+.bsov-check-svg{width:80px;height:80px;margin-bottom:24px;}
+.bsov-circle{stroke-dasharray:226;stroke-dashoffset:226;animation:draw-circle .6s cubic-bezier(.65,0,.35,1) .2s forwards;}
+@keyframes draw-circle{to{stroke-dashoffset:0}}
+.bsov-tick{stroke-dasharray:60;stroke-dashoffset:60;animation:draw-tick .35s ease .75s forwards;}
+@keyframes draw-tick{to{stroke-dashoffset:0}}
+.bsov-title{font-family:var(--f-d);font-size:26px;font-weight:800;color:#fff;margin:0 0 10px;}
+.bsov-sub{font-family:var(--f-b);font-size:15px;color:rgba(255,255,255,.55);margin:0 0 24px;}
+.bsov-summary{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px 20px;margin-bottom:28px;text-align:left;font-family:var(--f-b);font-size:14px;color:rgba(255,255,255,.75);line-height:1.9;}
+.bsov-summary strong{color:#c8ff00;}
+.bsov-btns{display:flex;gap:12px;}
+.bsov-btn-main{flex:1;background:#c8ff00;color:#050505;border:none;border-radius:12px;padding:14px 20px;font-family:var(--f-d);font-size:15px;font-weight:800;cursor:pointer;transition:opacity .2s;}
+.bsov-btn-main:hover{opacity:.88;}
+.bsov-btn-close{flex:1;background:rgba(255,255,255,.07);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 20px;font-family:var(--f-d);font-size:15px;font-weight:700;cursor:pointer;transition:background .2s;}
+.bsov-btn-close:hover{background:rgba(255,255,255,.12);}
 </style>
 </head>
 <body>
@@ -479,6 +498,23 @@ footer{background:#050505;color:white;padding:48px 0 28px;border-top:1px solid r
 <!-- MODAL -->
 <div class="ov" id="ov" onclick="cOut(event)">
   <div class="modal"><button class="mx" onclick="cM()">✕</button><div id="mb"></div></div>
+</div>
+
+<!-- BOOKING SUCCESS OVERLAY -->
+<div class="bsov" id="book-success-ov">
+  <div class="bsov-card">
+    <svg class="bsov-check-svg" viewBox="0 0 80 80">
+      <circle class="bsov-circle" cx="40" cy="40" r="36" fill="none" stroke="#16a34a" stroke-width="4"/>
+      <polyline class="bsov-tick" points="24,42 35,53 56,30" fill="none" stroke="#16a34a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <h2 class="bsov-title">Rezervimi u dërgua!</h2>
+    <p class="bsov-sub">Agjencia do të konfirmojë brenda 2 orëve.</p>
+    <div class="bsov-summary" id="bsov-summary"></div>
+    <div class="bsov-btns">
+      <button class="bsov-btn-main" onclick="window.location.href='/'">Shiko Rezervimet</button>
+      <button class="bsov-btn-close" onclick="closeBookingSuccess()">Mbyll</button>
+    </div>
+  </div>
 </div>
 
 <div id="nav-dropdown"></div>
@@ -873,9 +909,28 @@ async function submitBooking(){
   try{
     const res=await fetch('/api/bookings',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({vehicle_id:bookCar.vehicle_id,business_id:bookCar.business_id,from_date:from,to_date:to,payment_type:'cash'})});
     const data=await res.json();
-    if(res.ok){cM();alert('✓ Rezervimi u dërgua! Agjencia do të konfirmojë.');}
+    if(res.ok){cM();showBookingSuccess(from,to,bookCar.price);}
     else alert(data.error||'Gabim.');
   }catch{alert('Gabim. Provo sërish.');}
+}
+
+let _bsovTimer=null;
+function showBookingSuccess(from,to,pricePerDay){
+  const name=(_vehicle?.brand||'')+' '+(_vehicle?.model||'');
+  const days=from&&to?Math.ceil((new Date(to)-new Date(from))/86400000):1;
+  const total=pricePerDay*(days||1);
+  const fmt=d=>new Date(d).toLocaleDateString('sq-AL',{day:'numeric',month:'short',year:'numeric'});
+  document.getElementById('bsov-summary').innerHTML=
+    `<div>🚗 <strong>${name.trim()}</strong></div>`+
+    `<div>📅 ${fmt(from)} → ${fmt(to)}</div>`+
+    `<div>💰 Total: <strong>€${total}</strong> (${days} ditë × €${pricePerDay})</div>`;
+  document.getElementById('book-success-ov').classList.add('open');
+  clearTimeout(_bsovTimer);
+  _bsovTimer=setTimeout(closeBookingSuccess,8000);
+}
+function closeBookingSuccess(){
+  clearTimeout(_bsovTimer);
+  document.getElementById('book-success-ov').classList.remove('open');
 }
 
 // ── REVEAL OBSERVER ──
