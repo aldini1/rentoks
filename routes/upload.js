@@ -26,6 +26,9 @@ const upload = multer({
 router.post('/vehicle-photo', upload.single('photo'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'Nuk u dërgua asnjë foto.' });
 
+  console.log(`[upload] file: ${req.file.originalname} | size: ${req.file.size} | mime: ${req.file.mimetype}`);
+  console.log(`[upload] cloudinary config: cloud=${process.env.CLOUDINARY_CLOUD_NAME} key=${process.env.CLOUDINARY_API_KEY ? '✓' : '✗'} secret=${process.env.CLOUDINARY_API_SECRET ? '✓' : '✗'}`);
+
   try {
     const result = await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
@@ -34,10 +37,11 @@ router.post('/vehicle-photo', upload.single('photo'), async (req, res) => {
       );
       Readable.from(req.file.buffer).pipe(stream);
     });
+    console.log(`[upload] success: ${result.secure_url}`);
     res.json({ url: result.secure_url, public_id: result.public_id });
   } catch (err) {
-    console.error('Cloudinary upload:', err.message);
-    res.status(500).json({ error: 'Ngarkimi i fotos dështoi.' });
+    console.error('[upload] Cloudinary error:', err);
+    res.status(500).json({ error: `Ngarkimi i fotos dështoi: ${err.message}` });
   }
 });
 

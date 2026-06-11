@@ -75,7 +75,7 @@ router.post('/vehicles', authMiddleware, bizOnly, async (req, res) => {
        RETURNING *`,
       [req.user.id, brand, model, year, fuel, transmission, seats || 5, category,
        price_per_day, location, city, license_plate, features, description,
-       JSON.stringify(photo_urls || [])]
+       photo_urls || []]
     );
 
     // Përditëso fleet_size
@@ -86,7 +86,8 @@ router.post('/vehicles', authMiddleware, bizOnly, async (req, res) => {
 
     res.status(201).json({ message: 'Vetura u shtua!', vehicle: result.rows[0] });
   } catch (err) {
-    res.status(500).json({ error: 'Gabim serveri.' });
+    console.error('POST /api/businesses/vehicles:', err);
+    res.status(500).json({ error: err.message || 'Gabim serveri.' });
   }
 });
 
