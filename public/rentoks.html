@@ -185,10 +185,10 @@ input,select{font-family:var(--f-b);}
 /* ── Glassmorphism Search Bar ── */
 .srch-bar{
   position:relative;
-  background:rgba(255,255,255,.08);
-  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-  border:1px solid rgba(255,255,255,.15);
-  box-shadow:0 8px 32px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.1);
+  background:rgba(255,255,255,.15);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1.5px solid rgba(255,255,255,.35);
+  box-shadow:0 8px 40px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.1);
   border-radius:60px;
   display:flex;align-items:center;padding:7px;
   width:100%;max-width:860px;margin-bottom:22px;
@@ -199,10 +199,10 @@ input,select{font-family:var(--f-b);}
   border:none;background:transparent;text-align:left;font-family:var(--f-b);min-width:0;
 }
 .srch-pill:hover,.srch-pill.active{background:rgba(255,255,255,.08);}
-.srch-pill-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:rgba(255,255,255,.45);}
-.srch-pill-val{font-size:15px;font-weight:600;color:rgba(255,255,255,.95);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.srch-pill-val.ph{color:rgba(255,255,255,.38);font-weight:400;}
-.srch-div{width:1px;height:30px;background:rgba(255,255,255,.15);flex-shrink:0;}
+.srch-pill-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:#fff;opacity:1;}
+.srch-pill-val{font-size:15px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.srch-pill-val.ph{color:rgba(255,255,255,.7);font-weight:400;}
+.srch-div{width:1px;height:30px;background:rgba(255,255,255,.25);flex-shrink:0;}
 .srch-btn{
   flex-shrink:0;width:52px;height:52px;background:var(--lime);border-radius:50%;
   border:none;display:flex;align-items:center;justify-content:center;
@@ -583,7 +583,7 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
   .srch-bar{flex-direction:column;border-radius:20px;padding:8px;gap:2px;}
   .srch-pill{border-radius:12px;padding:12px 16px;}
   .srch-pill:hover,.srch-pill.active{background:rgba(255,255,255,.1);}
-  .srch-div{width:auto;height:1px;margin:0 8px;background:rgba(255,255,255,.12);}
+  .srch-div{width:auto;height:1px;margin:0 8px;background:rgba(255,255,255,.25);}
   .srch-btn{width:100%;border-radius:12px;height:48px;font-family:var(--f-d);font-size:15px;font-weight:800;gap:8px;}
   .srch-btn-lbl{display:inline;}
   .sp-city{width:calc(100vw - 32px);left:0;}
@@ -655,7 +655,7 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
   <div class="hero-content">
     <div class="hero-eyebrow h-rv d1"><span class="dot"></span> 🇽🇰 Platforma #1 në Kosovë</div>
     <h1 class="hero-h1 h-rv d2">Merr veturën tënde<br>në <span class="grad">Kosovë</span></h1>
-    <p class="hero-desc h-rv d3">Krahaso oferta nga agjenci të verifikuara. Rezervo në 60 sekonda, pa komisione të fshehura.</p>
+    <p class="hero-desc h-rv d3">Krahaso oferta nga agjenci të verifikuara. Rezervo në 60 sekonda.</p>
 
     <!-- Airbnb-style search bar -->
     <div class="srch-bar h-rv d4" id="srch-bar">
