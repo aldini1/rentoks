@@ -16,6 +16,7 @@ app.use('/api/users', require('./routes/users'));
 app.use('/api/businesses', require('./routes/businesses'));
 app.use('/api/bookings', require('./routes/bookings'));
 app.use('/api/vehicles', require('./routes/vehicles'));
+app.use('/api/upload',   require('./routes/upload'));
 
 
 // Health check

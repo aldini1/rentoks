@@ -236,6 +236,11 @@ tr:hover td{background:var(--paper);}
 .pu-icon{font-size:32px;margin-bottom:8px;}
 .pu-text{font-size:14px;font-weight:600;color:var(--gray2);margin-bottom:4px;}
 .pu-sub{font-size:12px;color:var(--gray);}
+.photo-previews{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.photo-thumb{position:relative;width:80px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;border:1px solid var(--border2);}
+.photo-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.pt-rm{position:absolute;top:3px;right:3px;width:20px;height:20px;background:rgba(0,0,0,.75);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;color:white;border:none;padding:0;line-height:1;}
+.pt-rm:hover{background:rgba(180,0,0,.9);}
 .form-actions{display:flex;gap:10px;padding-top:20px;border-top:1px solid var(--border);}
 .btn-save{padding:11px 28px;background:var(--ink);color:white;border-radius:10px;font-family:var(--f-d);font-size:14px;font-weight:800;transition:all .15s;}
 .btn-save:hover{background:var(--blue);}
@@ -600,11 +605,13 @@ tr:hover td{background:var(--paper);}
         </div>
         <div class="form-grid full">
           <div class="fg"><label>Fotografi (min 4)</label>
-            <div class="photo-upload">
-              <div class="pu-icon">📸</div>
-              <div class="pu-text">Kliko ose tërhiq fotot këtu</div>
-              <div class="pu-sub">JPG, PNG · Max 10MB secila · Min 4 foto</div>
-            </div>
+            <label class="photo-upload" id="photo-drop">
+              <span class="pu-icon">📸</span>
+              <span class="pu-text">Kliko ose tërhiq fotot këtu</span>
+              <span class="pu-sub">JPG, PNG, WEBP · Max 5MB secila</span>
+              <input type="file" id="photo-input" accept="image/jpeg,image/png,image/webp" multiple style="display:none;">
+            </label>
+            <div class="photo-previews" id="photo-previews"></div>
           </div>
         </div>
         <div class="form-actions">
@@ -1116,9 +1123,95 @@ document.querySelectorAll('.ff').forEach(f => {
 
 // ── CALENDAR ──
 function buildCalendar() {
-  // Thirr implementimin real me të dhëna nga API + blokime manuale
-  if (typeof loadCalendarReal === 'function') {
-    loadCalendarReal();
+  if (typeof loadCalendarReal === 'function') loadCalendarReal();
+}
+
+// ── PHOTO UPLOAD ──
+const selectedFiles = [];
+
+document.getElementById('photo-input').addEventListener('change', function() {
+  addPhotoFiles(Array.from(this.files));
+  this.value = '';
+});
+
+const _dropZone = document.getElementById('photo-drop');
+_dropZone.addEventListener('dragover', e => { e.preventDefault(); _dropZone.style.borderColor = 'var(--ink)'; });
+_dropZone.addEventListener('dragleave', () => { _dropZone.style.borderColor = ''; });
+_dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  _dropZone.style.borderColor = '';
+  addPhotoFiles(Array.from(e.dataTransfer.files).filter(f => /image\/(jpeg|png|webp)/.test(f.type)));
+});
+
+function addPhotoFiles(files) {
+  files.forEach(file => {
+    if (file.size > 5 * 1024 * 1024) { showToast(`${file.name}: max 5MB`); return; }
+    selectedFiles.push(file);
+  });
+  renderPhotoPreviews();
+}
+
+function renderPhotoPreviews() {
+  const c = document.getElementById('photo-previews');
+  c.innerHTML = '';
+  selectedFiles.forEach((file, i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'photo-thumb';
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(file);
+    const rm = document.createElement('button');
+    rm.className = 'pt-rm';
+    rm.textContent = '×';
+    rm.type = 'button';
+    rm.onclick = e => { e.preventDefault(); selectedFiles.splice(i, 1); renderPhotoPreviews(); };
+    wrap.append(img, rm);
+    c.appendChild(wrap);
+  });
+}
+
+async function addVehicle() {
+  const btn = document.getElementById('save-car-btn');
+  btn.disabled = true;
+  try {
+    const photoUrls = [];
+    for (let i = 0; i < selectedFiles.length; i++) {
+      btn.textContent = `Duke ngarkuar foton ${i + 1}/${selectedFiles.length}...`;
+      const fd = new FormData();
+      fd.append('photo', selectedFiles[i]);
+      const r = await fetch('/api/upload/vehicle-photo', { method: 'POST', body: fd });
+      if (!r.ok) { const e = await r.json(); throw new Error(e.error || 'Ngarkimi dështoi'); }
+      photoUrls.push((await r.json()).url);
+    }
+    btn.textContent = 'Duke ruajtur...';
+    const payload = {
+      brand:         document.getElementById('v-brand').value,
+      model:         document.getElementById('v-model').value,
+      year:          parseInt(document.getElementById('v-year').value) || null,
+      fuel:          document.getElementById('v-fuel').value,
+      transmission:  document.getElementById('v-transmission').value,
+      price_per_day: parseFloat(document.getElementById('v-price').value) || null,
+      seats:         parseInt(document.getElementById('v-seats').value),
+      location:      document.getElementById('v-location').value,
+      license_plate: document.getElementById('v-plate').value,
+      features:      document.getElementById('v-features').value,
+      description:   document.getElementById('v-description').value,
+      photo_urls:    photoUrls,
+    };
+    const res = await fetch('/api/vehicles', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) { const e = await res.json(); throw new Error(e.error || 'Gabim serveri'); }
+    showToast('Vetura u shtua me sukses! ✓');
+    hideAddCar();
+    selectedFiles.length = 0;
+    renderPhotoPreviews();
+  } catch (err) {
+    showToast(`Gabim: ${err.message}`);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Ruaj Veturën';
   }
 }
 </script>
