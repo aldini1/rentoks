@@ -1105,13 +1105,22 @@ function renderVehicleCard(v) {
 function renderFleet(vehicles) {
   const grid = document.getElementById('fleet-grid');
   const noRes = document.getElementById('no-results');
-  if (!vehicles.length) {
+  if (!vehicles || !vehicles.length) {
     grid.innerHTML = '';
-    noRes.style.display = 'block';
+    if (noRes) noRes.style.display = 'block';
     return;
   }
-  noRes.style.display = 'none';
+  if (noRes) noRes.style.display = 'none';
   grid.innerHTML = vehicles.map(renderVehicleCard).join('');
+  // Cards rendered with .rv start at opacity:0 — make visible immediately
+  grid.querySelectorAll('.rv').forEach(el => {
+    const r = el.getBoundingClientRect();
+    if (r.top < window.innerHeight + 100) {
+      el.classList.add('in');   // already in view → show now
+    } else {
+      obs.observe(el);          // below fold → animate on scroll
+    }
+  });
 }
 
 function showFleetSkeleton() {
@@ -1133,15 +1142,15 @@ async function loadFleetVehicles() {
   try {
     const res = await fetch('/api/vehicles?limit=12');
     const data = await res.json();
-    console.log('[fleet] status:', res.status, '| count:', Array.isArray(data) ? data.length : data);
+    console.log('[fleet] status:', res.status, '| data:', data);
     if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
     allVehicles = Array.isArray(data) ? data : [];
-    renderFleet(allVehicles);
   } catch(err) {
     console.error('[fleet] load error:', err);
     allVehicles = [];
-    renderFleet([]);
   }
+  // renderFleet outside try/catch so a render bug doesn't show "no results"
+  renderFleet(allVehicles);
 }
 
 // ── FILTER ──
