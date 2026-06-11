@@ -1077,7 +1077,7 @@ function renderVehicleCard(v) {
   const specs = [v.seats ? `${v.seats} vende` : '', v.transmission||'', v.fuel||'']
     .filter(Boolean).map(s => `<span class="sp">${s}</span>`).join('');
   return `
-    <div class="vc rv" data-cat="${v.category||''}" data-city="${v.city||''}" data-price="${v.price_per_day||0}" data-id="${v.id}">
+    <div class="vc rv" data-cat="${v.category||''}" data-city="${v.city||''}" data-price="${v.price_per_day||0}" data-id="${parseInt(v.id)}">
       <div class="vc-top">
         ${photo}
         <button class="vc-save" onclick="event.stopPropagation();toggleSave(this)">♡</button>
@@ -1096,7 +1096,7 @@ function renderVehicleCard(v) {
             <div class="vc-avail">Disponueshëm sot</div>
             <div class="vc-price">€${v.price_per_day} <small>/ ditë</small></div>
           </div>
-          <button class="btn-bk" onclick="event.stopPropagation();window.location.href='/vehicle.html?id=${v.id}'">Rezervo</button>
+          <button class="btn-bk" onclick="event.stopPropagation();window.location.href='/vehicle.html?id='+this.closest('[data-id]').dataset.id">Rezervo</button>
         </div>
       </div>
     </div>`;
