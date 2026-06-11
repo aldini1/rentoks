@@ -431,8 +431,9 @@ async function updateVehicleForm(id) {
       dashToast('Plotëso: Marka, Modeli dhe Çmimi!', 'error');
       return;
     }
+    console.log('[updateVehicleForm] PUT /api/businesses/vehicles/' + id, body);
     await apiCall(`/businesses/vehicles/${id}`, 'PUT', body);
-    dashToast('Vetura u ruajt! ✓', 'success');
+    dashToast('Vetura u përditësua! ✓', 'success');
     cancelEditVehicle();
     loadVehicles();
     loadStats();

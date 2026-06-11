@@ -95,23 +95,34 @@ router.post('/vehicles', authMiddleware, bizOnly, async (req, res) => {
 router.put('/vehicles/:id', authMiddleware, bizOnly, async (req, res) => {
   try {
     const { id } = req.params;
-    const { price_per_day, status, location, features, description } = req.body;
+    const { brand, model, year, fuel, transmission, seats,
+            price_per_day, location, features, description, status } = req.body;
 
-    // Kontrollo se i përket këtij biznesi
+    console.log(`[PUT /vehicles/${id}] body:`, JSON.stringify(req.body));
+
     const check = await pool.query(
       'SELECT id FROM vehicles WHERE id=$1 AND business_id=$2', [id, req.user.id]
     );
     if (check.rows.length === 0) return res.status(404).json({ error: 'Vetura nuk u gjet.' });
 
     const result = await pool.query(
-      `UPDATE vehicles SET price_per_day=$1, status=$2, location=$3,
-       features=$4, description=$5 WHERE id=$6 RETURNING *`,
-      [price_per_day, status, location, features, description, id]
+      `UPDATE vehicles SET
+         brand=$1, model=$2, year=$3, fuel=$4, transmission=$5, seats=$6,
+         price_per_day=$7, location=$8, features=$9, description=$10,
+         status=COALESCE($11, status),
+         updated_at=NOW()
+       WHERE id=$12 AND business_id=$13
+       RETURNING *`,
+      [brand, model, year, fuel, transmission, seats,
+       price_per_day, location, features, description,
+       status || null, id, req.user.id]
     );
 
+    console.log(`[PUT /vehicles/${id}] updated:`, result.rows[0]?.brand, result.rows[0]?.model);
     res.json({ message: 'Vetura u përditësua!', vehicle: result.rows[0] });
   } catch (err) {
-    res.status(500).json({ error: 'Gabim serveri.' });
+    console.error(`[PUT /vehicles/:id] error:`, err.message);
+    res.status(500).json({ error: err.message || 'Gabim serveri.' });
   }
 });
 
