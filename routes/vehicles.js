@@ -71,9 +71,9 @@ router.get('/:id', async (req, res) => {
   try {
     const result = await pool.query(
       `SELECT v.*,
-              b.business_name, b.city AS biz_city, b.logo_url, b.id AS biz_id
+              b.business_name, b.city AS biz_city, b.id AS biz_id
        FROM vehicles v
-       JOIN businesses b ON v.business_id = b.id
+       LEFT JOIN businesses b ON v.business_id = b.id
        WHERE v.id = $1`,
       [id]
     );
