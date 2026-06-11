@@ -158,7 +158,7 @@ router.get('/bookings', authMiddleware, bizOnly, async (req, res) => {
   try {
     const { status } = req.query;
     let query = `
-      SELECT b.*, v.brand, v.model, v.year,
+      SELECT b.*, v.brand, v.model, v.year, v.photo_urls as vehicle_photos,
              u.first_name, u.last_name, u.email as client_email, u.phone as client_phone
       FROM bookings b
       JOIN vehicles v ON b.vehicle_id = v.id

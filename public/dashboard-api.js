@@ -486,52 +486,114 @@ async function deleteVehicle(id) {
   } catch(err) { dashToast(err.message, 'error'); }
 }
 
+// ── Bookings page state ──
+let _allBookings = [];
+
+const _BK_MONTHS = ['Jan','Shk','Mar','Pri','Maj','Qer','Kor','Gus','Sht','Tet','Nën','Dhj'];
+function _bkFmtDate(s) {
+  if (!s) return '—';
+  const d = new Date(s);
+  return `${d.getDate()} ${_BK_MONTHS[d.getMonth()]}`;
+}
+function _bkInitials(first, last) {
+  return ((first?.[0] || '') + (last?.[0] || '')).toUpperCase() || '?';
+}
+
+const _BK_STATUS = {
+  pending:   '<span class="status pending">Në pritje</span>',
+  confirmed: '<span class="status confirmed">Konfirmuar</span>',
+  active:    '<span class="status active">Aktive</span>',
+  completed: '<span class="status completed">Përfunduar</span>',
+  cancelled: '<span class="status cancelled">Anuluar</span>',
+};
+
+function renderBookingsTable(bookings) {
+  const tbody = document.getElementById('bk-tbody');
+  if (!tbody) return;
+
+  if (!bookings.length) {
+    tbody.innerHTML = `<tr><td colspan="7">
+      <div class="bk-empty">
+        <svg width="56" height="44" viewBox="0 0 56 44" fill="none">
+          <rect x="2" y="10" width="52" height="28" rx="6" stroke="#ccc" stroke-width="2.5"/>
+          <path d="M8 10l4-8h32l4 8" stroke="#ccc" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M10 28h36M10 22h20" stroke="#ccc" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <div class="bk-empty-title">Ende nuk ke rezervime</div>
+        <div class="bk-empty-sub">Rezervimet e klientëve do të shfaqen këtu</div>
+      </div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = bookings.map(b => {
+    const photos = Array.isArray(b.vehicle_photos) ? b.vehicle_photos.filter(Boolean) : [];
+    const thumb = photos.length
+      ? `<img src="${photos[0]}" alt="">`
+      : '🚗';
+    const ini = _bkInitials(b.first_name, b.last_name);
+    const actions = b.status === 'pending'
+      ? `<button class="bk-btn-confirm" onclick="confirmBooking(${b.id}).then(()=>loadAllBookings())">Konfirmo</button>
+         <button class="bk-btn-cancel" onclick="cancelBooking(${b.id}).then(()=>loadAllBookings())">Anulo</button>`
+      : `<button class="bk-btn-detail" onclick="openBookingDetail()">Detaje</button>`;
+
+    return `<tr>
+      <td><div class="bk-car">
+        <div class="bk-car-thumb">${thumb}</div>
+        <div class="bk-car-name">${b.brand} ${b.model} ${b.year}</div>
+      </div></td>
+      <td><div class="bk-client">
+        <div class="bk-avatar">${ini}</div>
+        <div class="bk-client-name">${b.first_name} ${b.last_name}</div>
+      </div></td>
+      <td style="white-space:nowrap;color:var(--ink);font-weight:500;">${_bkFmtDate(b.from_date)} → ${_bkFmtDate(b.to_date)}</td>
+      <td><span class="bk-days">${b.days ?? '—'}</span></td>
+      <td>${_BK_STATUS[b.status] || b.status}</td>
+      <td><div class="bk-price">€${b.total}</div></td>
+      <td><div class="bk-actions">${actions}</div></td>
+    </tr>`;
+  }).join('');
+}
+
+function filterBookingsTable() {
+  const q = (document.getElementById('bk-search-input')?.value || '').toLowerCase().trim();
+  const st = document.getElementById('bk-status-filter')?.value || '';
+  const period = document.getElementById('bk-period-filter')?.value || '';
+  const now = new Date(); now.setHours(0,0,0,0);
+
+  let filtered = _allBookings;
+  if (st) filtered = filtered.filter(b => b.status === st);
+  if (q)  filtered = filtered.filter(b =>
+    `${b.brand} ${b.model} ${b.first_name} ${b.last_name}`.toLowerCase().includes(q));
+  if (period === 'month') {
+    filtered = filtered.filter(b => {
+      const d = new Date(b.from_date);
+      return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+    });
+  } else if (period === 'week') {
+    const weekAgo = new Date(now); weekAgo.setDate(now.getDate() - 7);
+    filtered = filtered.filter(b => new Date(b.from_date) >= weekAgo);
+  }
+  renderBookingsTable(filtered);
+}
+
 // ── Load All Bookings (full bookings page) ──
 async function loadAllBookings() {
   try {
     const bookings = await apiCall('/businesses/bookings');
+    _allBookings = bookings;
 
-    // Update page subtitle
-    const pending = bookings.filter(b => b.status === 'pending').length;
-    const phSub = document.querySelector('#page-bookings .ph-sub');
-    if (phSub) phSub.textContent = `${bookings.length} gjithsej · ${pending} kërkojnë vëmendje`;
+    const pending   = bookings.filter(b => b.status === 'pending').length;
+    const confirmed = bookings.filter(b => b.status === 'confirmed').length;
+    const cancelled = bookings.filter(b => b.status === 'cancelled').length;
 
-    const tbody = document.querySelector('#page-bookings table tbody');
-    if (!tbody) return;
+    const el = id => document.getElementById(id);
+    if (el('bk-subtitle'))      el('bk-subtitle').textContent      = `${bookings.length} gjithsej · ${pending} kërkojnë vëmendje`;
+    if (el('bk-stat-all'))      el('bk-stat-all').textContent      = bookings.length;
+    if (el('bk-stat-pending'))  el('bk-stat-pending').textContent  = pending;
+    if (el('bk-stat-confirmed'))el('bk-stat-confirmed').textContent = confirmed;
+    if (el('bk-stat-cancelled'))el('bk-stat-cancelled').textContent = cancelled;
 
-    const statusMap = {
-      pending: '<span class="status pending">Në pritje</span>',
-      confirmed: '<span class="status confirmed">Konfirmuar</span>',
-      active: '<span class="status active">Aktive</span>',
-      completed: '<span class="status completed">Përfunduar</span>',
-      cancelled: '<span class="status cancelled">Anuluar</span>'
-    };
-
-    if (bookings.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--gray);">Nuk ka rezervime akoma.</td></tr>';
-      return;
-    }
-
-    tbody.innerHTML = bookings.map((b, i) => `
-      <tr>
-        <td style="color:var(--gray);font-weight:700;">#${String(b.id).padStart(3,'0')}</td>
-        <td><div class="td-car">${b.brand} ${b.model}</div></td>
-        <td><div class="td-client">
-          <div class="td-av" style="background:var(--paper2);display:flex;align-items:center;justify-content:center;font-size:11px;">👤</div>
-          <div class="td-name">${b.first_name} ${b.last_name}</div>
-        </div></td>
-        <td>${b.from_date?.split('T')[0]}</td>
-        <td>${b.to_date?.split('T')[0]}</td>
-        <td>${b.days}</td>
-        <td>${statusMap[b.status] || b.status}</td>
-        <td><div class="td-price">€${b.total}</div></td>
-        <td><div class="td-actions">
-          ${b.status === 'pending'
-            ? `<button class="btn-sm confirm" onclick="confirmBooking(${b.id});loadAllBookings()">Konfirmo</button><button class="btn-sm cancel" onclick="cancelBooking(${b.id});loadAllBookings()">Anulo</button>`
-            : `<button class="btn-sm view">Detaje</button>`}
-        </div></td>
-      </tr>
-    `).join('');
+    renderBookingsTable(bookings);
   } catch(err) { console.error('All bookings error:', err); }
 }
 
