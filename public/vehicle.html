@@ -505,6 +505,22 @@ let _bookFrom = null, _bookTo = null, _bcalOff = 0;
 const params = new URLSearchParams(window.location.search);
 const VEHICLE_ID = params.get('id');
 
+// ── DEMO DATA (shfaqet menjëherë, zëvendësohet nga API) ──
+const DEMO_VEHICLE = {
+  id: VEHICLE_ID || 1,
+  brand: 'VW', model: 'Golf 7', year: 2019,
+  category: 'Ekonomike', city: 'Prishtinë',
+  fuel: 'Diesel', transmission: 'Automatik', seats: 5,
+  price_per_day: 35,
+  payment_type: 'card',
+  business_name: 'AutoPrishtina Rent',
+  biz_city: 'Prishtinë',
+  description: 'Veturë e mirëmbajtur, e pastër dhe gati për udhëtim. Rezervoni tani dhe konfirmimi vjen menjëherë.',
+  features: 'A/C, GPS, Bluetooth, USB Charger, Spare Tire',
+  image_url: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=1200&q=85',
+  business_id: 1,
+};
+
 // ── FALLBACK IMAGES per category ──
 const CAT_IMGS = {
   'Premium':   'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&q=85',
@@ -523,16 +539,21 @@ const CARD_IMGS = [
 
 // ── LOAD VEHICLE ──
 async function loadVehicle() {
-  if (!VEHICLE_ID) { showNotFound(); return; }
+  // Rendero demo menjëherë — faqja shfaqet pa vonesë
+  _vehicle = DEMO_VEHICLE;
+  renderVehicle(DEMO_VEHICLE);
+  loadSimilar(DEMO_VEHICLE.category, DEMO_VEHICLE.id);
+
+  // Nëse ka ID, provo API dhe zëvendëso demo
+  if (!VEHICLE_ID) return;
   try {
     const res = await fetch(`/api/vehicles/${VEHICLE_ID}`);
-    if (!res.ok) { showNotFound(); return; }
-    _vehicle = await res.json();
-    renderVehicle(_vehicle);
-    loadSimilar(_vehicle.category, _vehicle.id);
-  } catch {
-    showNotFound();
-  }
+    if (!res.ok) return; // demo mbetet
+    const real = await res.json();
+    _vehicle = real;
+    renderVehicle(real);
+    loadSimilar(real.category, real.id);
+  } catch { /* demo mbetet */ }
 }
 
 function renderVehicle(v) {
@@ -588,8 +609,13 @@ function renderVehicle(v) {
       v.payment_type === 'cash' ? 'Cash only' : 'Cash ose Kartë';
   }
 
-  // Trigger reveal
-  setTimeout(() => document.querySelectorAll('.rv').forEach(el => obs.observe(el)), 50);
+  // Trigger reveal — observe + fallback force-show
+  document.querySelectorAll('.rv').forEach(el => {
+    obs.observe(el);
+    // Force-show elements already in viewport
+    const r = el.getBoundingClientRect();
+    if (r.top < window.innerHeight) el.classList.add('in');
+  });
 }
 
 function showNotFound() {
@@ -856,6 +882,13 @@ document.addEventListener('click', e => {
 });
 
 // ── INIT ──
+// Siguro që .rv elements shfaqen edhe nëse observer nuk triggohet (p.sh. në viewport direkt)
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.querySelectorAll('.rv:not(.in)').forEach(el => el.classList.add('in'));
+  }, 800);
+});
+
 loadVehicle();
 </script>
 </body>
