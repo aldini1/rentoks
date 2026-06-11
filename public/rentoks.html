@@ -768,7 +768,7 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
     </div>
 
     <div class="fleet-grid" id="fleet-grid">
-      <div class="vc rv d1" data-cat="Ekonomike" data-city="Prishtinë" data-price="35">
+      <div class="vc rv d1" data-cat="Ekonomike" data-city="Prishtinë" data-price="35" data-id="1">
         <div class="vc-top">
           <img class="vc-photo" src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=600&q=80" alt="VW Golf 7"/>
           <button class="vc-save" onclick="toggleSave(this)">♡</button>
@@ -787,7 +787,7 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
         </div>
       </div>
 
-      <div class="vc rv d2" data-cat="Premium" data-city="Prizren" data-price="75">
+      <div class="vc rv d2" data-cat="Premium" data-city="Prizren" data-price="75" data-id="2">
         <div class="vc-top">
           <img class="vc-photo" src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&q=80" alt="BMW 5 Series"/>
           <button class="vc-save" onclick="toggleSave(this)">♡</button>
@@ -806,7 +806,7 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
         </div>
       </div>
 
-      <div class="vc rv d3" data-cat="SUV" data-city="Pejë" data-price="55">
+      <div class="vc rv d3" data-cat="SUV" data-city="Pejë" data-price="55" data-id="3">
         <div class="vc-top">
           <img class="vc-photo" src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=600&q=80" alt="Toyota RAV4"/>
           <button class="vc-save" onclick="toggleSave(this)">♡</button>
@@ -825,7 +825,7 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
         </div>
       </div>
 
-      <div class="vc rv d1" data-cat="Ekonomike" data-city="Prishtinë" data-price="28">
+      <div class="vc rv d1" data-cat="Ekonomike" data-city="Prishtinë" data-price="28" data-id="4">
         <div class="vc-top">
           <img class="vc-photo" src="https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=600&q=80" alt="Skoda Octavia"/>
           <button class="vc-save" onclick="toggleSave(this)">♡</button>
@@ -844,7 +844,7 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
         </div>
       </div>
 
-      <div class="vc rv d2" data-cat="Van" data-city="Prishtinë" data-price="65">
+      <div class="vc rv d2" data-cat="Van" data-city="Prishtinë" data-price="65" data-id="5">
         <div class="vc-top">
           <img class="vc-photo" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Mercedes Vito"/>
           <button class="vc-save" onclick="toggleSave(this)">♡</button>
@@ -863,7 +863,7 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
         </div>
       </div>
 
-      <div class="vc rv d3" data-cat="Premium" data-city="Prishtinë" data-price="90">
+      <div class="vc rv d3" data-cat="Premium" data-city="Prishtinë" data-price="90" data-id="6">
         <div class="vc-top">
           <img class="vc-photo" src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=600&q=80" alt="Mercedes E-Class"/>
           <button class="vc-save" onclick="toggleSave(this)">♡</button>
@@ -1404,6 +1404,14 @@ const stripObs = new IntersectionObserver(entries=>{
 
 const strip = document.querySelector('.hero-strip');
 if(strip) stripObs.observe(strip);
+
+// ── KARTA KLIKUESHME → vehicle.html ──
+document.querySelectorAll('.vc[data-id]').forEach(card => {
+  card.addEventListener('click', function(e) {
+    if (e.target.closest('.btn-bk') || e.target.closest('.vc-save')) return;
+    window.location.href = '/vehicle.html?id=' + this.dataset.id;
+  });
+});
 </script>
 </body>
 </html>
