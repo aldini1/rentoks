@@ -66,25 +66,23 @@ router.get('/', async (req, res) => {
 
 // GET /api/vehicles/:id — detajet e plotë + info agjencia
 router.get('/:id', async (req, res) => {
-  const id = parseInt(req.params.id, 10);
-  if (isNaN(id)) return res.status(400).json({ error: 'ID e pavlefshme.' });
   try {
+    const id = parseInt(req.params.id, 10);
+    console.log('Vehicle ID requested:', req.params.id, 'parsed:', id);
+    if (isNaN(id)) return res.status(400).json({ error: 'ID e pavlefshme' });
+
     const result = await pool.query(
-      `SELECT v.*,
-              b.business_name, b.city AS biz_city, b.id AS biz_id
+      `SELECT v.*, b.business_name, b.city as business_city
        FROM vehicles v
-       LEFT JOIN businesses b ON v.business_id = b.id
-       WHERE v.id = $1`,
+       JOIN businesses b ON v.business_id = b.id
+       WHERE v.id = $1 AND v.status = 'active'`,
       [id]
     );
-
-    if (!result.rows.length) {
-      return res.status(404).json({ error: 'Vetura nuk u gjet.' });
-    }
-
+    console.log('Query result rows:', result.rows.length);
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Vetura nuk u gjet.' });
     res.json(result.rows[0]);
-  } catch (err) {
-    console.error('GET /api/vehicles/:id:', err.message);
+  } catch(err) {
+    console.error('Vehicle detail error:', err.message, err.stack);
     res.status(500).json({ error: err.message });
   }
 });
