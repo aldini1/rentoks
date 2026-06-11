@@ -1128,6 +1128,7 @@ function buildCalendar() {
 
 // ── PHOTO UPLOAD ──
 const selectedFiles = [];
+let _existingPhotoUrls = [];
 
 document.getElementById('photo-input').addEventListener('change', function() {
   addPhotoFiles(Array.from(this.files));
@@ -1154,6 +1155,30 @@ function addPhotoFiles(files) {
 function renderPhotoPreviews() {
   const c = document.getElementById('photo-previews');
   c.innerHTML = '';
+
+  if (_existingPhotoUrls.length > 0) {
+    const lbl = document.createElement('div');
+    lbl.style.cssText = 'width:100%;font-size:12px;font-weight:600;color:var(--gray);margin-bottom:6px;';
+    lbl.textContent = `${_existingPhotoUrls.length} foto ekzistuese · Shto më shumë`;
+    c.appendChild(lbl);
+  }
+
+  _existingPhotoUrls.forEach((url, i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'photo-thumb';
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = '';
+    const rm = document.createElement('button');
+    rm.className = 'pt-rm';
+    rm.textContent = '×';
+    rm.type = 'button';
+    rm.title = 'Hiq foton';
+    rm.onclick = e => { e.preventDefault(); _existingPhotoUrls.splice(i, 1); renderPhotoPreviews(); };
+    wrap.append(img, rm);
+    c.appendChild(wrap);
+  });
+
   selectedFiles.forEach((file, i) => {
     const wrap = document.createElement('div');
     wrap.className = 'photo-thumb';

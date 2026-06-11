@@ -96,7 +96,7 @@ router.put('/vehicles/:id', authMiddleware, bizOnly, async (req, res) => {
   try {
     const { id } = req.params;
     const { brand, model, year, fuel, transmission, seats,
-            price_per_day, location, features, description, status } = req.body;
+            price_per_day, location, features, description, status, photo_urls } = req.body;
 
     console.log(`[PUT /vehicles/${id}] body:`, JSON.stringify(req.body));
 
@@ -109,12 +109,13 @@ router.put('/vehicles/:id', authMiddleware, bizOnly, async (req, res) => {
       `UPDATE vehicles SET
          brand=$1, model=$2, year=$3, fuel=$4, transmission=$5, seats=$6,
          price_per_day=$7, location=$8, features=$9, description=$10,
-         status=COALESCE($11, status)
-       WHERE id=$12 AND business_id=$13
+         photo_urls=COALESCE($11, photo_urls),
+         status=COALESCE($12, status)
+       WHERE id=$13 AND business_id=$14
        RETURNING *`,
       [brand, model, year, fuel, transmission, seats,
        price_per_day, location, features, description,
-       status || null, id, req.user.id]
+       photo_urls || null, status || null, id, req.user.id]
     );
 
     console.log(`[PUT /vehicles/${id}] updated:`, result.rows[0]?.brand, result.rows[0]?.model);

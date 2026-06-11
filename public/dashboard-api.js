@@ -364,6 +364,9 @@ function resetFormToAddMode() {
   const editBtn = document.getElementById('btn-cancel-edit');
   if (addBtn) addBtn.style.display = '';
   if (editBtn) editBtn.style.display = 'none';
+  if (typeof _existingPhotoUrls !== 'undefined') _existingPhotoUrls.length = 0;
+  if (typeof selectedFiles !== 'undefined') selectedFiles.length = 0;
+  if (typeof renderPhotoPreviews === 'function') renderPhotoPreviews();
 }
 
 function enterEditVehicleForm(v) {
@@ -379,6 +382,14 @@ function enterEditVehicleForm(v) {
   document.getElementById('v-location').value = v.location || '';
   document.getElementById('v-features').value = v.features || '';
   document.getElementById('v-description').value = v.description || '';
+
+  // Load existing photos
+  if (typeof _existingPhotoUrls !== 'undefined') {
+    _existingPhotoUrls.length = 0;
+    (Array.isArray(v.photo_urls) ? v.photo_urls : []).filter(Boolean).forEach(u => _existingPhotoUrls.push(u));
+  }
+  if (typeof selectedFiles !== 'undefined') selectedFiles.length = 0;
+  if (typeof renderPhotoPreviews === 'function') renderPhotoPreviews();
 
   const titleEl = document.getElementById('fp-title');
   const subEl = document.getElementById('fp-sub');
@@ -415,6 +426,18 @@ async function updateVehicleForm(id) {
   const btn = document.getElementById('save-car-btn');
   if (btn) btn.disabled = true;
   try {
+    // Start with kept existing photos, then upload any new ones
+    const photoUrls = [...(typeof _existingPhotoUrls !== 'undefined' ? _existingPhotoUrls : [])];
+    const files = typeof selectedFiles !== 'undefined' ? selectedFiles : [];
+    for (let i = 0; i < files.length; i++) {
+      if (btn) btn.textContent = `Duke ngarkuar foton ${i + 1}/${files.length}...`;
+      const fd = new FormData();
+      fd.append('photo', files[i]);
+      const r = await fetch('/api/upload/vehicle-photo', { method: 'POST', body: fd });
+      if (!r.ok) { const e = await r.json(); throw new Error(e.error || 'Ngarkimi dështoi'); }
+      photoUrls.push((await r.json()).url);
+    }
+
     const body = {
       brand:         document.getElementById('v-brand')?.value,
       model:         document.getElementById('v-model')?.value?.trim(),
@@ -426,6 +449,7 @@ async function updateVehicleForm(id) {
       location:      document.getElementById('v-location')?.value?.trim(),
       features:      document.getElementById('v-features')?.value?.trim(),
       description:   document.getElementById('v-description')?.value?.trim(),
+      photo_urls:    photoUrls,
     };
     if (!body.brand || !body.model || !body.price_per_day) {
       dashToast('Plotëso: Marka, Modeli dhe Çmimi!', 'error');
