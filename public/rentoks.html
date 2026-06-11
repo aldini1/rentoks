@@ -382,6 +382,11 @@ input,select{font-family:var(--f-b);}
 .btn-bk{padding:9px 18px;background:rgba(200,255,0,.12);color:var(--lime);border-radius:10px;font-size:13px;font-weight:700;transition:all .2s;border:1px solid rgba(200,255,0,.2);}
 .btn-bk:hover{background:var(--lime);color:#050505;transform:scale(1.03);box-shadow:0 0 16px rgba(200,255,0,.4);}
 .btn-bk:active{transform:scale(.97);}
+.vc-skel{border-radius:16px;overflow:hidden;background:#0d0d0d;border:1px solid rgba(255,255,255,.06);}
+.vc-skel-img{height:220px;background:linear-gradient(90deg,#111 25%,#1c1c1c 50%,#111 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;}
+.vc-skel-body{padding:18px;display:flex;flex-direction:column;gap:10px;}
+.vc-skel-line{border-radius:4px;background:linear-gradient(90deg,#111 25%,#1c1c1c 50%,#111 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
 /* ══ TESTIMONIALS ══ */
 .testi-section{background:#0d0d0d;border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05);padding:80px 0;}
@@ -762,115 +767,7 @@ button:active:not(.cal-day):not(.city-item):not(.fpill){transform:scale(.96);}
       <button class="fpill" onclick="filterByCat('Me Shofer')" data-cat="Me Shofer">Me Shofer</button>
     </div>
 
-    <div class="fleet-grid" id="fleet-grid">
-      <div class="vc rv d1" data-cat="Ekonomike" data-city="Prishtinë" data-price="35" data-id="1">
-        <div class="vc-top">
-          <img class="vc-photo" src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=600&q=80" alt="VW Golf 7"/>
-          <button class="vc-save" onclick="toggleSave(this)">♡</button>
-          <div class="vc-biz-chip"><div class="biz-dot">✓</div><span class="biz-name">AutoPrishtina Rent</span></div>
-        </div>
-        <div class="vc-body">
-          <div class="vc-top-row"><div class="vc-cat-tag">Ekonomike</div><div class="vc-rating"><span class="stars">★★★★★</span> 5.0</div></div>
-          <div class="vc-name">VW Golf 7 — 2019</div>
-          <div class="vc-loc">📍 Prishtinë, Aeroporti</div>
-          <div class="vc-specs"><span class="sp">5 vende</span><span class="sp">Automatik</span><span class="sp">Diesel</span><span class="sp">A/C</span></div>
-          <div class="vc-foot">
-            <div><div class="vc-avail">Disponueshëm sot</div><div class="vc-price">€35 <small>/ ditë</small></div></div>
-            <button class="btn-bk" onclick="openBook('VW Golf 7 — 2019','AutoPrishtina Rent',35,1,1)">Rezervo</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="vc rv d2" data-cat="Premium" data-city="Prizren" data-price="75" data-id="2">
-        <div class="vc-top">
-          <img class="vc-photo" src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&q=80" alt="BMW 5 Series"/>
-          <button class="vc-save" onclick="toggleSave(this)">♡</button>
-          <div class="vc-biz-chip"><div class="biz-dot">✓</div><span class="biz-name">PrizrenCar Rental</span></div>
-        </div>
-        <div class="vc-body">
-          <div class="vc-top-row"><div class="vc-cat-tag">Premium</div><div class="vc-rating"><span class="stars">★★★★★</span> 4.9</div></div>
-          <div class="vc-name">BMW 5 Series — 2021</div>
-          <div class="vc-loc">📍 Prizren, Qendra</div>
-          <div class="vc-specs"><span class="sp">5 vende</span><span class="sp">Automatik</span><span class="sp">Benzinë</span><span class="sp">LED</span></div>
-          <div class="vc-foot">
-            <div><div class="vc-avail">Disponueshëm nga nesër</div><div class="vc-price">€75 <small>/ ditë</small></div></div>
-            <button class="btn-bk" onclick="openBook('BMW 5 Series — 2021','PrizrenCar Rental',75)">Rezervo</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="vc rv d3" data-cat="SUV" data-city="Pejë" data-price="55" data-id="3">
-        <div class="vc-top">
-          <img class="vc-photo" src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=600&q=80" alt="Toyota RAV4"/>
-          <button class="vc-save" onclick="toggleSave(this)">♡</button>
-          <div class="vc-biz-chip"><div class="biz-dot">✓</div><span class="biz-name">KosRent Pejë</span></div>
-        </div>
-        <div class="vc-body">
-          <div class="vc-top-row"><div class="vc-cat-tag">SUV</div><div class="vc-rating"><span class="stars">★★★★☆</span> 4.7</div></div>
-          <div class="vc-name">Toyota RAV4 — 2022</div>
-          <div class="vc-loc">📍 Pejë, Qendra</div>
-          <div class="vc-specs"><span class="sp">5 vende</span><span class="sp">Automatik</span><span class="sp">Hibrid</span><span class="sp">4x4</span></div>
-          <div class="vc-foot">
-            <div><div class="vc-avail">Disponueshëm sot</div><div class="vc-price">€55 <small>/ ditë</small></div></div>
-            <button class="btn-bk" onclick="openBook('Toyota RAV4 — 2022','KosRent Pejë',55)">Rezervo</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="vc rv d1" data-cat="Ekonomike" data-city="Prishtinë" data-price="28" data-id="4">
-        <div class="vc-top">
-          <img class="vc-photo" src="https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=600&q=80" alt="Skoda Octavia"/>
-          <button class="vc-save" onclick="toggleSave(this)">♡</button>
-          <div class="vc-biz-chip"><div class="biz-dot">✓</div><span class="biz-name">DriveKS Prishtinë</span></div>
-        </div>
-        <div class="vc-body">
-          <div class="vc-top-row"><div class="vc-cat-tag">Ekonomike</div><div class="vc-rating"><span class="stars">★★★★★</span> 4.8</div></div>
-          <div class="vc-name">Skoda Octavia — 2020</div>
-          <div class="vc-loc">📍 Prishtinë, Qendra</div>
-          <div class="vc-specs"><span class="sp">5 vende</span><span class="sp">Manuale</span><span class="sp">Diesel</span><span class="sp">GPS</span></div>
-          <div class="vc-foot">
-            <div><div class="vc-avail">Disponueshëm sot</div><div class="vc-price">€28 <small>/ ditë</small></div></div>
-            <button class="btn-bk" onclick="openBook('Skoda Octavia — 2020','DriveKS Prishtinë',28)">Rezervo</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="vc rv d2" data-cat="Van" data-city="Prishtinë" data-price="65" data-id="5">
-        <div class="vc-top">
-          <img class="vc-photo" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Mercedes Vito"/>
-          <button class="vc-save" onclick="toggleSave(this)">♡</button>
-          <div class="vc-biz-chip"><div class="biz-dot">✓</div><span class="biz-name">AutoPrishtina Rent</span></div>
-        </div>
-        <div class="vc-body">
-          <div class="vc-top-row"><div class="vc-cat-tag">Van</div><div class="vc-rating"><span class="stars">★★★★★</span> 5.0</div></div>
-          <div class="vc-name">Mercedes Vito — 2020</div>
-          <div class="vc-loc">📍 Prishtinë, Aeroporti</div>
-          <div class="vc-specs"><span class="sp">8 vende</span><span class="sp">Manuale</span><span class="sp">Diesel</span><span class="sp">A/C</span></div>
-          <div class="vc-foot">
-            <div><div class="vc-avail">Disponueshëm sot</div><div class="vc-price">€65 <small>/ ditë</small></div></div>
-            <button class="btn-bk" onclick="openBook('Mercedes Vito — 2020','AutoPrishtina Rent',65)">Rezervo</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="vc rv d3" data-cat="Premium" data-city="Prishtinë" data-price="90" data-id="6">
-        <div class="vc-top">
-          <img class="vc-photo" src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=600&q=80" alt="Mercedes E-Class"/>
-          <button class="vc-save" onclick="toggleSave(this)">♡</button>
-          <div class="vc-biz-chip"><div class="biz-dot">✓</div><span class="biz-name">LuxDrive Kosovo</span></div>
-        </div>
-        <div class="vc-body">
-          <div class="vc-top-row"><div class="vc-cat-tag">Premium</div><div class="vc-rating"><span class="stars">★★★★★</span> 5.0</div></div>
-          <div class="vc-name">Mercedes E-Class — 2022</div>
-          <div class="vc-loc">📍 Prishtinë, Dragodan</div>
-          <div class="vc-specs"><span class="sp">5 vende</span><span class="sp">Automatik</span><span class="sp">Hybrid</span><span class="sp">Panorama</span></div>
-          <div class="vc-foot">
-            <div><div class="vc-avail">Disponueshëm sot</div><div class="vc-price">€90 <small>/ ditë</small></div></div>
-            <button class="btn-bk" onclick="openBook('Mercedes E-Class — 2022','LuxDrive Kosovo',90)">Rezervo</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="fleet-grid" id="fleet-grid"></div>
 
     <div id="no-results" style="display:none;text-align:center;padding:48px 0;color:var(--gray);">
       <div style="font-size:48px;margin-bottom:12px;">🔍</div>
@@ -1170,34 +1067,93 @@ function pickDay(ts){
 function fmt(d){return d.toLocaleDateString('sq-AL',{day:'numeric',month:'short'});}
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 
-// ── FILTER ──
-function filterCards(cat, city, maxPrice) {
-  const cards = document.querySelectorAll('#fleet-grid .vc');
-  let shown = 0;
-  cards.forEach(c => {
-    const cCat = c.dataset.cat;
-    const cCity = c.dataset.city;
-    const cPrice = parseInt(c.dataset.price);
-    let show = true;
-    if(cat && cCat !== cat) show = false;
-    if(city && cCity !== city) show = false;
-    if(maxPrice && cPrice > maxPrice) show = false;
-    c.style.display = show ? '' : 'none';
-    if(show) shown++;
-  });
-  document.getElementById('no-results').style.display = shown === 0 ? 'block' : 'none';
+// ── FLEET DATA ──
+let allVehicles = [];
+
+function renderVehicleCard(v) {
+  const photo = Array.isArray(v.photo_urls) && v.photo_urls.length
+    ? `<img class="vc-photo" src="${v.photo_urls[0]}" alt="${v.brand} ${v.model}">`
+    : `<div class="vc-photo" style="background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:44px;">🚗</div>`;
+  const specs = [v.seats ? `${v.seats} vende` : '', v.transmission||'', v.fuel||'']
+    .filter(Boolean).map(s => `<span class="sp">${s}</span>`).join('');
+  return `
+    <div class="vc rv" data-cat="${v.category||''}" data-city="${v.city||''}" data-price="${v.price_per_day||0}" data-id="${v.id}">
+      <div class="vc-top">
+        ${photo}
+        <button class="vc-save" onclick="event.stopPropagation();toggleSave(this)">♡</button>
+        <div class="vc-biz-chip"><div class="biz-dot">✓</div><span class="biz-name">${v.business_name||''}</span></div>
+      </div>
+      <div class="vc-body">
+        <div class="vc-top-row">
+          <div class="vc-cat-tag">${v.category||'Sedan'}</div>
+          <div class="vc-rating"><span class="stars">★★★★★</span> 5.0</div>
+        </div>
+        <div class="vc-name">${v.brand} ${v.model} — ${v.year}</div>
+        <div class="vc-loc">📍 ${v.location||v.city||''}</div>
+        <div class="vc-specs">${specs}</div>
+        <div class="vc-foot">
+          <div>
+            <div class="vc-avail">Disponueshëm sot</div>
+            <div class="vc-price">€${v.price_per_day} <small>/ ditë</small></div>
+          </div>
+          <button class="btn-bk" onclick="event.stopPropagation();window.location.href='/vehicle.html?id=${v.id}'">Rezervo</button>
+        </div>
+      </div>
+    </div>`;
 }
 
+function renderFleet(vehicles) {
+  const grid = document.getElementById('fleet-grid');
+  const noRes = document.getElementById('no-results');
+  if (!vehicles.length) {
+    grid.innerHTML = '';
+    noRes.style.display = 'block';
+    return;
+  }
+  noRes.style.display = 'none';
+  grid.innerHTML = vehicles.map(renderVehicleCard).join('');
+}
+
+function showFleetSkeleton() {
+  document.getElementById('fleet-grid').innerHTML = Array.from({length: 6}, () =>
+    `<div class="vc-skel">
+      <div class="vc-skel-img"></div>
+      <div class="vc-skel-body">
+        <div class="vc-skel-line" style="width:38%;height:13px;"></div>
+        <div class="vc-skel-line" style="width:65%;height:17px;"></div>
+        <div class="vc-skel-line" style="width:50%;height:11px;"></div>
+        <div class="vc-skel-line" style="width:88%;height:11px;margin-top:8px;"></div>
+        <div class="vc-skel-line" style="width:40%;height:15px;margin-top:16px;"></div>
+      </div>
+    </div>`).join('');
+}
+
+async function loadFleetVehicles() {
+  showFleetSkeleton();
+  try {
+    const res = await fetch('/api/vehicles?limit=12');
+    if (!res.ok) throw new Error('API error');
+    const data = await res.json();
+    allVehicles = Array.isArray(data) ? data : [];
+    renderFleet(allVehicles);
+  } catch(err) {
+    allVehicles = [];
+    renderFleet([]);
+    console.error('Fleet load error:', err);
+  }
+}
+
+// ── FILTER ──
 function filterByCat(val) {
   document.querySelectorAll('.fpill').forEach(p => p.classList.remove('on'));
-  filterCards(val, '', null);
-  // scroll to fleet
+  const filtered = val ? allVehicles.filter(v => v.category === val) : allVehicles;
+  renderFleet(filtered);
   document.getElementById('fleet').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 function filterByPrice(max) {
-  document.querySelectorAll('.fpill').forEach(p => p.classList.remove('on'));
-  filterCards('', '', max);
+  const filtered = max ? allVehicles.filter(v => v.price_per_day <= max) : allVehicles;
+  renderFleet(filtered);
 }
 
 document.querySelectorAll('.fpill').forEach(p => {
@@ -1209,7 +1165,13 @@ document.querySelectorAll('.fpill').forEach(p => {
 
 // ── SEARCH ──
 function doSearch() {
-  filterCards('', _srchCity, null);
+  const city = _srchCity.toLowerCase();
+  const filtered = city
+    ? allVehicles.filter(v =>
+        (v.city||'').toLowerCase().includes(city) ||
+        (v.location||'').toLowerCase().includes(city))
+    : allVehicles;
+  renderFleet(filtered);
   document.getElementById('fleet').scrollIntoView({behavior:'smooth'});
 }
 
@@ -1395,13 +1357,15 @@ const stripObs = new IntersectionObserver(entries=>{
 const strip = document.querySelector('.hero-strip');
 if(strip) stripObs.observe(strip);
 
-// ── KARTA KLIKUESHME → vehicle.html ──
-document.querySelectorAll('.vc[data-id]').forEach(card => {
-  card.addEventListener('click', function(e) {
-    if (e.target.closest('.btn-bk') || e.target.closest('.vc-save')) return;
-    window.location.href = '/vehicle.html?id=' + this.dataset.id;
-  });
+// ── KARTA KLIKUESHME → vehicle.html (event delegation for dynamic cards) ──
+document.getElementById('fleet-grid').addEventListener('click', function(e) {
+  if (e.target.closest('.btn-bk') || e.target.closest('.vc-save')) return;
+  const card = e.target.closest('.vc[data-id]');
+  if (card) window.location.href = '/vehicle.html?id=' + card.dataset.id;
 });
+
+// ── LOAD FLEET ──
+loadFleetVehicles();
 </script>
 </body>
 </html>
