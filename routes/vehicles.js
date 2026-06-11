@@ -40,36 +40,26 @@ router.get('/debug', async (req, res) => {
 // GET /api/vehicles — lista aktive me filtrim
 router.get('/', async (req, res) => {
   try {
-    const { category, city, max_price, exclude_id, limit = 20, offset = 0 } = req.query;
-
-    const conditions = ["v.status = 'active'", "b.status != 'rejected'"];
+    const { city, category, limit = 12 } = req.query;
+    let query = `
+      SELECT v.*, b.business_name, b.city AS business_city
+      FROM vehicles v
+      JOIN businesses b ON v.business_id = b.id
+      WHERE v.status = 'active'
+    `;
     const params = [];
-    let i = 1;
+    if (city)     { params.push(city);     query += ` AND v.city = $${params.length}`; }
+    if (category) { params.push(category); query += ` AND v.category = $${params.length}`; }
+    params.push(parseInt(limit));
+    query += ` ORDER BY v.created_at DESC LIMIT $${params.length}`;
 
-    if (category)   { conditions.push(`v.category = $${i++}`);            params.push(category); }
-    if (city)       { conditions.push(`v.city ILIKE $${i++}`);            params.push(`%${city}%`); }
-    if (max_price)  { conditions.push(`v.price_per_day <= $${i++}`);      params.push(parseFloat(max_price)); }
-    if (exclude_id) { conditions.push(`v.id != $${i++}`);                 params.push(parseInt(exclude_id)); }
-
-    params.push(parseInt(limit), parseInt(offset));
-
-    const sql = `SELECT v.*, b.business_name, b.city AS biz_city, b.logo_url
-       FROM vehicles v
-       JOIN businesses b ON v.business_id = b.id
-       WHERE ${conditions.join(' AND ')}
-       ORDER BY v.created_at DESC
-       LIMIT $${i++} OFFSET $${i}`;
-
-    console.log('[GET /api/vehicles] conditions:', conditions, '| params:', params);
-
-    const result = await pool.query(sql, params);
-
-    console.log('[GET /api/vehicles] rows returned:', result.rows.length);
-
+    console.log('[GET /api/vehicles] query:', query, '| params:', params);
+    const result = await pool.query(query, params);
+    console.log('[GET /api/vehicles] rows:', result.rows.length);
     res.json(result.rows);
   } catch (err) {
-    console.error('GET /api/vehicles:', err.message);
-    res.status(500).json({ error: 'Gabim serveri.' });
+    console.error('[GET /api/vehicles] error:', err);
+    res.status(500).json({ error: err.message });
   }
 });
 
