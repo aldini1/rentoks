@@ -306,13 +306,13 @@ footer{background:#050505;color:white;padding:48px 0 28px;border-top:1px solid r
       <div class="gal-main">
         <img id="gal-img-main" src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&q=85" alt="Foto kryesore"/>
       </div>
-      <div class="gal-small">
-        <img id="gal-img-1" src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&q=80" alt="Foto 2"/>
+      <div class="gal-small" id="gal-slot-1">
+        <img id="gal-img-1" src="" alt="Foto 2"/>
       </div>
-      <div class="gal-small">
-        <img id="gal-img-2" src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&q=80" alt="Foto 3"/>
+      <div class="gal-small" id="gal-slot-2">
+        <img id="gal-img-2" src="" alt="Foto 3"/>
       </div>
-      <button class="gal-all-btn" onclick="alert('Galeria e plotë — coming soon')">
+      <button class="gal-all-btn" id="gal-all-btn" onclick="alert('Galeria e plotë — coming soon')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         Shiko të gjitha fotot
       </button>
@@ -552,14 +552,42 @@ function renderVehicle(v) {
   const name = `${v.brand} ${v.model}${v.year ? ' — ' + v.year : ''}`;
   document.title = `${name} — Rentoks`;
 
-  // Gallery — photo_urls array from API, fallback to category image
-  const photos = Array.isArray(v.photo_urls) && v.photo_urls.length
-    ? v.photo_urls
-    : [v.image_url || CAT_IMGS[v.category] || CAT_IMGS.default];
-  document.getElementById('gal-img-main').src = photos[0];
-  document.getElementById('gal-img-main').alt = name;
-  if (photos[1]) document.getElementById('gal-img-1').src = photos[1];
-  if (photos[2]) document.getElementById('gal-img-2').src = photos[2];
+  // Gallery — only use photo_urls, never show placeholders
+  const photos = (Array.isArray(v.photo_urls) ? v.photo_urls : []).filter(Boolean);
+  const galGrid  = document.getElementById('gal-grid');
+  const galMain  = document.getElementById('gal-img-main');
+  const galSlot1 = document.getElementById('gal-slot-1');
+  const galSlot2 = document.getElementById('gal-slot-2');
+  const galAllBtn = document.getElementById('gal-all-btn');
+
+  if (photos.length >= 1) {
+    galMain.src = photos[0];
+    galMain.alt = name;
+  }
+  if (photos.length >= 2) {
+    document.getElementById('gal-img-1').src = photos[1];
+    galSlot1.style.display = '';
+  } else {
+    galSlot1.style.display = 'none';
+  }
+  if (photos.length >= 3) {
+    document.getElementById('gal-img-2').src = photos[2];
+    galSlot2.style.display = '';
+  } else {
+    galSlot2.style.display = 'none';
+  }
+  // Adjust grid: 1 photo → full width; 2 photos → right col single tall slot
+  if (photos.length <= 1) {
+    galGrid.style.gridTemplateColumns = '1fr';
+    galGrid.style.gridTemplateRows = '520px';
+  } else if (photos.length === 2) {
+    galGrid.style.gridTemplateColumns = '';
+    galGrid.style.gridTemplateRows = '520px';
+  } else {
+    galGrid.style.gridTemplateColumns = '';
+    galGrid.style.gridTemplateRows = '';
+  }
+  galAllBtn.style.display = photos.length > 3 ? '' : 'none';
 
   // Breadcrumb + Name
   document.getElementById('bc-name').textContent = name;
