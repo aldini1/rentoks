@@ -485,6 +485,10 @@ footer{background:#050505;color:white;padding:48px 0 28px;border-top:1px solid r
 <div id="cursor"></div>
 
 <script>
+console.log('Full URL:', window.location.href);
+console.log('Search:', window.location.search);
+const params = new URLSearchParams(window.location.search);
+console.log('ID param:', params.get('id'));
 // ── STATE ──
 let _vehicle = null;
 let _bookFrom = null, _bookTo = null, _bcalOff = 0;
